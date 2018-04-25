@@ -15,5 +15,16 @@ public class Tablero {
 	}
 	
 	
+	public void mover(int casillaOrigen) {
+		Casilla origen = getCasilla(casillaOrigen);		
+	}
+	
+	
+	public Casilla getCasilla(int casilla) {
+		int y = (int) Math.floor(casilla / tamano);
+		int x = casilla % tamano;
+		return casillas[x][y];
+	}
+	
 	
 }
