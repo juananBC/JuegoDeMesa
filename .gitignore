@@ -12,3 +12,7 @@
 hs_err_pid*
 
 \.project
+
+\.classpath
+
+\.settings/org\.eclipse\.jdt\.core\.prefs
