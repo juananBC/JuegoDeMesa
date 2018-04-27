@@ -11,14 +11,27 @@ public class Tablero {
 		this.tamano = tamano;
 		
 		this.casillas = new Casilla[tamano][tamano];
+		
+		for(int y = 0; y < tamano; y++) {
+			for(int x = 0; x < tamano; x++) {			
+				this.casillas[x][y] = new Casilla(x+y, x, y);
+			}	
+		}
+		
 //		this.casillas = new Casilla[tamano*tamano];
 	}
 	
 	
-	public void mover(int casillaOrigen) {
-		Casilla origen = getCasilla(casillaOrigen);		
+
+	public void mover(Casilla origen, Casilla destino) {
+		
+		if(!origen.isOcupada()) return;
+		
+		Pieza pieza = origen.getPieza();
+		
+		pieza.isValid(origen, destino);
+		
 	}
-	
 	
 	public Casilla getCasilla(int casilla) {
 		int y = (int) Math.floor(casilla / tamano);

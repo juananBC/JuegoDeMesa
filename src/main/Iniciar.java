@@ -11,6 +11,8 @@ public class Iniciar {
 		Tablero t = new Tablero(tamano);
 		
 		Jugador jugador1 = new Jugador();
+		Jugador jugador2 = new Jugador();
+		
 
 	}
 

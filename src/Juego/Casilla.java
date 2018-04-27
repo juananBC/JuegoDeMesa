@@ -5,11 +5,39 @@ public class Casilla {
 	private boolean ocupada;
 	private Pieza pieza;
 	private int id;
+	private int x,y;
 	
-	public Casilla(Pieza pieza, int id) {
+
+	public Casilla(Pieza pieza, int id, int x, int y) {
 		this.ocupada = false;
 		this.pieza = pieza;
 		this.id = id;
+		this.x = x;
+		this.y = y;
+	}
+
+	public Casilla(int id, int x, int y) {
+		this.ocupada = false;
+		this.pieza = null;
+		this.id = id;
+		this.x = x;
+		this.y = y;
+	}
+	
+	public int getId() {
+		return id;
+	}
+	
+	public void setId(int id) {
+		this.id = id;
+	}
+	
+	public int getX() {
+		return x;
+	}
+	
+	public int getY() {
+		return y;
 	}
 	
 	public void liberar() {

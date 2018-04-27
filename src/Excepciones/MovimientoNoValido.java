@@ -1,5 +1,8 @@
 package Excepciones;
 
-public class MovimientoNoValido {
-
+public class MovimientoNoValido extends Exception{
+	
+	public MovimientoNoValido(String msg) {
+		super(msg);
+	}
 }
