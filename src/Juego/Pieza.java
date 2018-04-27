@@ -41,7 +41,7 @@ public abstract class Pieza {
 		
 	}
 	
-	public abstract Casilla matar(Casilla c);
+	public abstract boolean matar(Casilla origen, Casilla destino);
 	public abstract Casilla mover(Casilla origen, Casilla destino);
 	
 	

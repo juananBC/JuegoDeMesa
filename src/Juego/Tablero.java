@@ -1,5 +1,7 @@
 package Juego;
 
+import Excepciones.MovimientoNoValido;
+
 public class Tablero {
 
 	private int tamano;
@@ -23,13 +25,13 @@ public class Tablero {
 	
 	
 
-	public void mover(Casilla origen, Casilla destino) {
+	public void mover(Casilla origen, Casilla destino) throws MovimientoNoValido {
 		
 		if(!origen.isOcupada()) return;
 		
-		Pieza pieza = origen.getPieza();
+		Pieza pieza = origen.getPieza();		
+		pieza.isValid(origen, destino);		
 		
-		pieza.isValid(origen, destino);
 		
 	}
 	
