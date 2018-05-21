@@ -11,7 +11,7 @@ import Juego.Tablero;
 public class Dama  extends Pieza{
 
 	public Dama(COLOR color) {
-		super(color, Tablero.TAMANO - 1);		
+		super(color, Tablero.TAMANO - 1, NOMBRE.PEON);		
 		
 		// Movimientos en diagonal
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		

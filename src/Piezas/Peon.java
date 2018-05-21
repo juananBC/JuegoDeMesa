@@ -10,7 +10,7 @@ import Juego.Pieza;
 public class Peon extends Pieza {
 
 	public Peon(COLOR color) {
-		super(color, 2, false, false);
+		super(color, 2, false, false, NOMBRE.PEON);
 		
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();	
 		movimientos.add(MOVIMIENTOS.HORIZONTAL);

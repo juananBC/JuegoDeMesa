@@ -11,7 +11,7 @@ import Juego.Tablero;
 public class Torre  extends Pieza{
 
 	public Torre(COLOR color) {
-		super(color, Tablero.TAMANO - 1);		
+		super(color, Tablero.TAMANO - 1, NOMBRE.TORRE);		
 		
 		// Movimientos en diagonal
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		

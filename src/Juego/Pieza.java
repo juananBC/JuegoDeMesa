@@ -9,28 +9,41 @@ public abstract class Pieza {
 	
 	// El negro sera invertido de signo en los movimientos
 	public static enum COLOR{BLANCO, NEGRO};
+	public static enum NOMBRE{REY, REINA, PEON, CABALLO, ALFIL, TORRE};
 	
 	private COLOR color;
 	private int distancia; // Cantidad de pasos que puede moverse
 	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
 	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
+	private NOMBRE nombre; 
+	
+	public NOMBRE getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(NOMBRE nombre) {
+		this.nombre = nombre;
+	}
 
 	private List<MOVIMIENTOS> movimientos;
 	private List<MOVIMIENTOS> matar;
 	
-	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar) {
+	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = libre;
 		this.puedeSaltar = puedeSaltar;
+		this.nombre = nombre;
 	}
 	
 	
-	public Pieza(COLOR color, int distancia) {
+	public Pieza(COLOR color, int distancia, NOMBRE nombre) {
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = true;
 		this.puedeSaltar = false;
+		this.nombre = nombre;
 	}
 
 

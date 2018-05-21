@@ -1,9 +1,16 @@
 package Juego;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Properties;
 
 import Excepciones.MovimientoNoValido;
+import Juego.Casilla.COLOR;
+import Juego.Pieza.NOMBRE;
+import Piezas.*;
 
 public class Tablero {
 
@@ -12,19 +19,71 @@ public class Tablero {
 	private int tamano;
 	private Casilla[][] casillas;
 	
+	private Properties prop = new Properties();
 	
-	public Tablero(int tamano) {
-		this.tamano = tamano;		
+	public Tablero() {
+		
+		try {
+			prop.load(new FileInputStream("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\config"));
+		} catch (IOException e) {
+		}
+		
+		System.out.println(prop);
+		
+		this.tamano = TAMANO;		
 		this.casillas = new Casilla[tamano][tamano];
 		
 		for(int y = 0; y < tamano; y++) {
-			for(int x = 0; x < tamano; x++) {			
-				this.casillas[x][y] = new Casilla(x+y, x, y);
+			for(int x = 0; x < tamano; x++) {		
+				COLOR color = ((x+y)%2 == 0)? COLOR.BLANCO: COLOR.NEGRO;
+				this.casillas[x][y] = new Casilla(x+y, x, y, color);
+				ponerPieza(this.casillas[x][y]);
+				
 			}	
 		}
 	}
 	
-	
+	private void ponerPieza(Casilla casilla) {
+		Pieza pieza = null;		
+		int x = casilla.getX();
+		int y = casilla.getY();
+		
+		if(y > 1 && y < 6 ) {
+			System.out.println("VACIO");
+			return;
+		}
+		
+		Pieza.COLOR color = (y <= 1) ? Pieza.COLOR.BLANCO : Pieza.COLOR.NEGRO;
+
+		if (y == 1 || y == 6) {
+			pieza = new Peon(color);
+		} else {
+			System.out.println(prop.getProperty(x + ""));
+			NOMBRE nombreCase = NOMBRE.valueOf(prop.getProperty(x + ""));
+			switch (nombreCase) {
+			case CABALLO:
+				pieza = new Caballo(color);
+				break;
+			case TORRE:
+				pieza = new Torre(color);
+				break;
+			case REY:
+				pieza = new Rey(color);
+				break;
+			case REINA:
+				pieza = new Reina(color);
+				break;
+			case ALFIL:
+				pieza = new Alfil(color);
+				break;
+			default:
+
+				break;
+			}
+		}
+		if(pieza == null ) return;
+		casilla.setPieza(pieza);
+	}
 
 	/**
 	 * Realiza el movimiento desde la casilla de origen a la casilla de destino
@@ -85,11 +144,11 @@ public class Tablero {
 	public List<Casilla> getMovimientos(Casilla c) {
 		List<Casilla> lista = new ArrayList<Casilla>();
 		
-		Pieza p = c.getPieza();
-		for(Movimiento mov: p.getMovimientos()) {
-			
-		}
-		
+//		Pieza p = c.getPieza();
+//		for(Movimiento mov: p.getMovimientos()) {
+//			
+//		}
+//		
 		
 		return lista;
 	}

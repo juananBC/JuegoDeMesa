@@ -10,9 +10,9 @@ import Juego.Pieza;
 import Juego.Tablero;
 
 public class Alfil extends Pieza{
-
+	
 	public Alfil(COLOR color) {
-		super(color, Tablero.TAMANO - 1);		
+		super(color, Tablero.TAMANO - 1, NOMBRE.ALFIL);		
 		
 		// Movimientos en diagonal
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		

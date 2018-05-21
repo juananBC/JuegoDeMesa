@@ -11,7 +11,7 @@ import Juego.Pieza;
 public class Caballo extends Pieza{
 
 	public Caballo(COLOR color) {
-		super(color, 0, true, true);
+		super(color, 0, true, true, NOMBRE.CABALLO);
 
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
 		movimientos.add(MOVIMIENTOS.L);		
