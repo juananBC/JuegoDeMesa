@@ -44,9 +44,17 @@ public class Casilla {
 		ocupada = false;
 	}
 	
-	public void ocupar(Pieza pieza) {
+	
+	public Pieza ocupar(Pieza pieza) {		
+		Pieza p = null;
+		if(ocupada == true) {
+			p = getPieza();
+		}
+		
 		ocupada = true;
 		this.pieza = pieza;
+		
+		return p;
 	}
 
 	 

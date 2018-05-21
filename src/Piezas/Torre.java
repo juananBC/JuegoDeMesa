@@ -8,15 +8,14 @@ import Juego.Movimiento.MOVIMIENTOS;
 import Juego.Pieza;
 import Juego.Tablero;
 
-public class Dama  extends Pieza{
+public class Torre  extends Pieza{
 
-	public Dama(COLOR color) {
+	public Torre(COLOR color) {
 		super(color, Tablero.TAMANO - 1);		
 		
 		// Movimientos en diagonal
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
-		movimientos.add(MOVIMIENTOS.HORIZONTAL);	
-		movimientos.add(MOVIMIENTOS.DIAGONAL);
+		movimientos.add(MOVIMIENTOS.HORIZONTAL);
 		
 		setMovimientos(movimientos);		
 		setMatar(movimientos);			

@@ -1,26 +1,46 @@
 package Juego;
 
-import java.util.ArrayList;
+import java.util.List;
 
 import Excepciones.MovimientoNoValido;
+import Juego.Movimiento.MOVIMIENTOS;
 
 public abstract class Pieza {
 	
 	// El negro sera invertido de signo en los movimientos
-	public  static  enum COLOR{BLANCO, NEGRO};
+	public static enum COLOR{BLANCO, NEGRO};
+	
 	private COLOR color;
+	private int distancia; // Cantidad de pasos que puede moverse
+	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
+	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
+
+	private List<MOVIMIENTOS> movimientos;
+	private List<MOVIMIENTOS> matar;
 	
-	private ArrayList<Movimiento> movimientos;
-	
-	public Pieza(COLOR color) {
+	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar) {
 		this.color = color;
+		this.distancia = distancia;
+		this.libre = libre;
+		this.puedeSaltar = puedeSaltar;
 	}
 	
-	public void setMovimientos(ArrayList<Movimiento> movimientos) {
-		this.movimientos = movimientos;
-	}
 	
-	public void isValid(Casilla origen, Casilla destino) throws MovimientoNoValido {
+	public Pieza(COLOR color, int distancia) {
+		this.color = color;
+		this.distancia = distancia;
+		this.libre = true;
+		this.puedeSaltar = false;
+	}
+
+
+	/**
+	 * 
+	 * @param origen
+	 * @param destino
+	 * @throws MovimientoNoValido
+	 */
+	public boolean isValid(Casilla origen, Casilla destino)  {
 		
 		int direccion = (color == COLOR.BLANCO)? 1:-1;
 		
@@ -30,19 +50,98 @@ public abstract class Pieza {
 		// Obtiene el movimiento realizado
 		Movimiento mov = new Movimiento(x, y);
 		
-		for(Movimiento movimiento : movimientos) {
+		if(movimientoValido(mov, origen, destino) || matarValido(mov, origen, destino)) {	
+			 return true;	
+		}
+		
+		return false;
+	}
+	
+	
+	public boolean movimientoValido(Movimiento m, Casilla origen, Casilla destino) {
+		for(MOVIMIENTOS movimiento : movimientos) {	
 			
-			if(movimiento.comparar(mov)) {				
-				return;
+			if(m.checkMovimiento(movimiento, this)) {				
+				return true;
 			}
 		}
 		
-		throw new MovimientoNoValido("No es posible realizar este movimiento");
-		
+		return false;
+	}
+	
+	public boolean matarValido(Movimiento m, Casilla origen, Casilla destino) {
+		for(MOVIMIENTOS movimiento : matar) {				
+			if(m.checkMovimiento(movimiento, this)) {				
+				return true;
+			}
+		}		
+		return false;
 	}
 	
 	public abstract boolean matar(Casilla origen, Casilla destino);
 	public abstract Casilla mover(Casilla origen, Casilla destino);
+
+
+
+	public COLOR getColor() {
+		return color;
+	}
+
+
+
+	public void setColor(COLOR color) {
+		this.color = color;
+	}
+
+
+
+	public List<MOVIMIENTOS> getMovimientos() {
+		return movimientos;
+	}
+
+
+
+	public void setMovimientos(List<MOVIMIENTOS> movimientos) {
+		this.movimientos = movimientos;
+	}
+
+
+
+	public List<MOVIMIENTOS> getMatar() {
+		return matar;
+	}
+
+
+
+	public void setMatar(List<MOVIMIENTOS> matar) {
+		this.matar = matar;
+	}
+	
+	
+	public int getDistancia() {
+		return distancia;
+	}
+
+	public void setDistancia(int distancia) {
+		this.distancia = distancia;
+	}
+	
+	public void setLibre(boolean libre) {
+		this.libre = libre;
+	}
+	
+	public boolean isLibre() {
+		return libre;
+	}
+	
+
+	public void setPuedeSaltar(boolean puedeSaltar) {
+		this.puedeSaltar = puedeSaltar;
+	}
+	
+	public boolean isPuedeSaltar() {
+		return puedeSaltar;
+	}
 	
 	
 	

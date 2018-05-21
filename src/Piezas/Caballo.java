@@ -4,22 +4,19 @@ import java.util.ArrayList;
 import java.util.List;
 
 import Juego.Casilla;
+import Juego.Movimiento;
 import Juego.Movimiento.MOVIMIENTOS;
 import Juego.Pieza;
-import Juego.Tablero;
 
-public class Dama  extends Pieza{
+public class Caballo extends Pieza{
 
-	public Dama(COLOR color) {
-		super(color, Tablero.TAMANO - 1);		
-		
-		// Movimientos en diagonal
+	public Caballo(COLOR color) {
+		super(color, 0, true, true);
+
 		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
-		movimientos.add(MOVIMIENTOS.HORIZONTAL);	
-		movimientos.add(MOVIMIENTOS.DIAGONAL);
-		
+		movimientos.add(MOVIMIENTOS.L);		
 		setMovimientos(movimientos);		
-		setMatar(movimientos);			
+		setMatar(movimientos);	
 	}
 
 	@Override
