@@ -74,6 +74,7 @@ public class Controlador {
 			
 			pieza.mover(origen, destino);
 			guardaMovimiento(origen, destino);
+			convertirPeon(destino, pieza);
 			turno++;
 			return true;
 		} 
@@ -137,6 +138,15 @@ public class Controlador {
 	}
 	
 	
+	private void convertirPeon(Casilla casilla, Pieza p) {
+		if(p  instanceof Peon) {
+			//p.setNombre(NOMBRE.REINA);
+			p = new Reina(p.getColor());
+			casilla.setPieza(p);
+			
+		}
+		
+	}
 	
 	
 	private void guardaMovimiento(Casilla origen, Casilla destino) {

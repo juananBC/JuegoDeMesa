@@ -67,10 +67,8 @@ public class GUI {
 		});
 	}
 
-
 	public GUI() {
 		initialize();
-
 	}
 
 	private void initialize() {
