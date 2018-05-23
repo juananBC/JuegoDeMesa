@@ -36,6 +36,9 @@ public class GUI {
 
 	private JFrame frmAjedrez;
 
+	private static Juego juego;
+	private static JPanel jpTablero;
+	
 	/**
 	 * Launch the application.
 	 */
@@ -46,6 +49,8 @@ public class GUI {
 					System.out.println("Inicio del ajedrez");
 					GUI window = new GUI();
 					window.frmAjedrez.setVisible(true);
+					
+					juego = new Juego(new Tablero(), jpTablero);
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -54,17 +59,12 @@ public class GUI {
 		});
 	}
 
-	/**
-	 * Create the application.
-	 */
+
 	public GUI() {
 		initialize();
 
 	}
 
-	/**
-	 * Initialize the contents of the frame.
-	 */
 	private void initialize() {
 		frmAjedrez = new JFrame();
 		frmAjedrez.setTitle("Ajedrez");
@@ -81,17 +81,18 @@ public class GUI {
 		jpControles.setBackground(Color.RED);
 		frmAjedrez.getContentPane().add(jpControles, BorderLayout.SOUTH);
 		
-		JPanel jpTablero = new JPanel();
+		jpTablero = new JPanel();
 		jpTablero.setBackground(new Color(255, 255, 255));
 		frmAjedrez.getContentPane().add(jpTablero, BorderLayout.CENTER);
 		jpTablero.setLayout(null);
 		jpTablero.addComponentListener(new ComponentAdapter() {
 			@Override
 			public void componentResized(ComponentEvent arg0) {
-				new Juego(new Tablero(), jpTablero);
+				juego.pintarTablero();
 			}
 		});
 		
+
 		
 		
 		

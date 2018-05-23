@@ -55,26 +55,31 @@ public class Movimiento {
 	
 	public boolean isDiagonal(Pieza p) {
 
-		if(this.x < 0 && !p.isLibre()) return false;
+		if(limitarDireccion(p)) {
+			System.out.println("LIMITA DIAGONAL");
+			return false;
+		}
 
 		int x = Math.abs(this.x);
 		int y = Math.abs(this.y);
 
 		final int MAX = p.getDistancia();
-		if (x >= MAX || y >= MAX || x == 0 || y == 0) return false;		
+		if (x > MAX || y > MAX || x != y) return false;		
 		
-		return x == y;
+		return true;
 	}
 
 	public boolean isHorizontal(Pieza p) {
-		
-		if(this.x < 0 && !p.isLibre()) return false;
+		if(limitarDireccion(p)) {
+			System.out.println("LIMITA HORIZONTAL");
+			return false;
+		}
 
 		int x = Math.abs(this.x);
 		int y = Math.abs(this.y);
 
 		final int MAX = p.getDistancia();
-		if (x >= MAX || y >= MAX || x == 0 || y == 0) return false;
+		if (x > MAX || y > MAX ) return false;
 		return (x != 0 && y == 0) || (x == 0 && y != 0);
 	}
 
@@ -83,6 +88,12 @@ public class Movimiento {
 		int y = Math.abs(this.y);
 
 		return ((x == 2 && y == 1) || (x == 1 && y == 2));
+	}
+	
+	
+	private boolean limitarDireccion(Pieza p) {
+		// Limitacion para los peones: mira que vaya hacia adelante
+		return (!p.isLibre() && Integer.signum(p.mueveHacia()) != Integer.signum(this.y) );
 	}
 
 }

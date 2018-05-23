@@ -1,5 +1,6 @@
 package Juego;
 
+import Juego.Casilla.COLOR;
 
 public class Casilla {
 
@@ -13,21 +14,23 @@ public class Casilla {
 	private COLOR color;
 
 
-	public Casilla(Pieza pieza, int id, int x, int y) {
-		this.ocupada = false;
+	public Casilla(Pieza pieza, int x, int y) {
+		this.ocupada = true;
 		this.pieza = pieza;
-		this.id = id;
+		this.id = calcId( x,  y);
 		this.x = x;
 		this.y = y;
+		this.color = ((this.x + this.y)%2 == 0)? COLOR.BLANCO: COLOR.NEGRO;;
+
 	}
 
-	public Casilla(int id, int x, int y, COLOR color) {
+	public Casilla(int x, int y) {
 		this.ocupada = false;
 		this.pieza = null;
-		this.id = id;
+		this.id = calcId(x, y);
 		this.x = x;
 		this.y = y;
-		this.color = color;
+		this.color = ((this.x + this.y)%2 == 0)? COLOR.BLANCO: COLOR.NEGRO;;
 	}
 	
 	public int getId() {
@@ -48,6 +51,7 @@ public class Casilla {
 	
 	public void liberar() {
 		ocupada = false;
+		pieza = null;
 	}
 	
 
@@ -89,6 +93,12 @@ public class Casilla {
 		else this.ocupada = true;
 		
 		this.pieza = pieza;
+	}
+	
+	
+	private int calcId(int x, int y) {
+		int id = x * Tablero.TAMANO + y;	
+		return id;
 	}
 	
 }

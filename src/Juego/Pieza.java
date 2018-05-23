@@ -12,7 +12,7 @@ public abstract class Pieza {
 	public static enum NOMBRE{REY, REINA, PEON, CABALLO, ALFIL, TORRE};
 	
 	private COLOR color;
-	private int distancia; // Cantidad de pasos que puede moverse
+	private int distancia; 		// Cantidad de pasos que puede moverse
 	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
 	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
 	private NOMBRE nombre; 
@@ -55,13 +55,17 @@ public abstract class Pieza {
 	 */
 	public boolean isValid(Casilla origen, Casilla destino)  {
 		
-		int direccion = (color == COLOR.BLANCO)? 1:-1;
+		int direccion = mueveHacia();
 		
 		int x = destino.getX() - origen.getX();
-		int y = (destino.getY() - origen.getY()) * direccion;
+		int y = destino.getY() - origen.getY() ;
 
 		// Obtiene el movimiento realizado
 		Movimiento mov = new Movimiento(x, y);
+		
+		Pieza pDestino = destino.getPieza();
+		if(pDestino != null && this.getColor() == pDestino.getColor()) return false;
+		
 		
 		if(movimientoValido(mov, origen, destino) || matarValido(mov, origen, destino)) {	
 			 return true;	
@@ -72,6 +76,9 @@ public abstract class Pieza {
 	
 	
 	public boolean movimientoValido(Movimiento m, Casilla origen, Casilla destino) {
+		
+		if(destino.getPieza() != null) return false;
+		
 		for(MOVIMIENTOS movimiento : movimientos) {	
 			
 			if(m.checkMovimiento(movimiento, this)) {				
@@ -83,6 +90,9 @@ public abstract class Pieza {
 	}
 	
 	public boolean matarValido(Movimiento m, Casilla origen, Casilla destino) {
+		if( destino.getPieza() == null || destino.getPieza().getColor() == this.getColor()) return false;
+		
+		
 		for(MOVIMIENTOS movimiento : matar) {				
 			if(m.checkMovimiento(movimiento, this)) {				
 				return true;
@@ -91,6 +101,10 @@ public abstract class Pieza {
 		return false;
 	}
 	
+	public int mueveHacia() {
+		return (color == COLOR.BLANCO)? 1:-1;
+		
+	}
 	public abstract boolean matar(Casilla origen, Casilla destino);
 	public abstract Casilla mover(Casilla origen, Casilla destino);
 
