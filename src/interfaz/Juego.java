@@ -179,7 +179,8 @@ public class Juego {
 						// Mover pieza
 						if (controlador.mover(idOrigen, idDestino)) {
 							casillaSeleccionada.setIcon(null);
-							ponerFicha(casillaActual, getNombrePieza(piezaOrigen));
+							piezaDestino = controlador.getPieza(idDestino);
+							ponerFicha(casillaActual, getNombrePieza(piezaDestino));
 						}
 
 						casillaSeleccionada = null;
@@ -250,7 +251,7 @@ public class Juego {
 	
 	private void posiblesMovimiento(Casilla casilla) {
 		Pieza pieza = casilla.getPieza();
-		pieza.mover(casilla, new Casilla(5,5));
+		//pieza.mover(casilla, new Casilla(5,5));
 	}
 
 	public DIRECCION getOrientacion() {

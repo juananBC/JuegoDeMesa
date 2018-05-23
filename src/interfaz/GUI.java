@@ -55,7 +55,6 @@ public class GUI {
 					System.out.println("Inicio del ajedrez");
 					GUI window = new GUI();
 					window.frmAjedrez.setVisible(true);
-					boolean blancasArriba = false;
 					
 					Controlador gestor = new Controlador();
 					juego = new Juego(gestor, jpTablero);

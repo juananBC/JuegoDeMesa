@@ -23,12 +23,6 @@ public class Peon extends Pieza {
 	}
 
 	@Override
-	public boolean matar(Casilla origen, Casilla destino) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
 	public Casilla mover() {
 		
 		// Despues del primer movimiento, los peones solo pueden moverse una posicion

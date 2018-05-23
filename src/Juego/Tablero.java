@@ -67,8 +67,8 @@ public class Tablero {
 		return this.casillas[x][y];
 	}
 	
-	public void updateCasilla(Casilla casilla, int x, int y) {
-		this.casillas[x][y] = casilla;
+	public void updateCasilla(Casilla casilla) {
+		this.casillas[casilla.getX()][casilla.getY()] = casilla;
 	}
 	
 

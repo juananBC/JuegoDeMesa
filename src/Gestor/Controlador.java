@@ -72,9 +72,9 @@ public class Controlador {
 				matar(mata, getRival());
 			}
 			
-			pieza.mover(origen, destino);
-			guardaMovimiento(origen, destino);
+			pieza.mover();
 			convertirPeon(destino, pieza);
+			guardaMovimiento(origen, destino);
 			turno++;
 			return true;
 		} 
@@ -138,20 +138,24 @@ public class Controlador {
 	}
 	
 	
-	private void convertirPeon(Casilla casilla, Pieza p) {
+	private Pieza convertirPeon(Casilla casilla, Pieza p) {
 		if(p  instanceof Peon) {
+			if(casilla.getY() == 0 || casilla.getY() == Tablero.TAMANO - 1) {
 			//p.setNombre(NOMBRE.REINA);
 			p = new Reina(p.getColor());
 			casilla.setPieza(p);
+			}
 			
 		}
+		
+		return p;
 		
 	}
 	
 	
 	private void guardaMovimiento(Casilla origen, Casilla destino) {
-		tablero.updateCasilla(origen, origen.getX(), origen.getY());
-		tablero.updateCasilla(destino, destino.getX(), destino.getY());
+		tablero.updateCasilla(origen);
+		tablero.updateCasilla(destino);
 	}
 	
 	
@@ -203,7 +207,7 @@ public class Controlador {
 		if(pieza == null ) return false;
 		
 		casilla.ocupar(pieza);
-		tablero.updateCasilla(casilla, x, y);
+		tablero.updateCasilla(casilla);
 		return true;
 	}
 
