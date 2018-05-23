@@ -5,9 +5,11 @@ import Excepciones.MovimientoNoValido;
 public class Jugador {
 
 	private int numFichas;
-
-	public Jugador() {
+	private COLOR color;
+	
+	public Jugador(COLOR color) {
 		this.numFichas = 16;
+		this.color = color;
 	}
 
 	public void mover(Tablero tablero, int origen, int destino) throws MovimientoNoValido {
@@ -21,5 +23,23 @@ public class Jugador {
 	public void matar() {
 		if(numFichas > 0) numFichas--;
 	}
+
+	public int getNumFichas() {
+		return numFichas;
+	}
+
+	public void setNumFichas(int numFichas) {
+		this.numFichas = numFichas;
+	}
+
+	public COLOR getColor() {
+		return color;
+	}
+
+	public void setColor(COLOR color) {
+		this.color = color;
+	}
+	
+	
 
 }

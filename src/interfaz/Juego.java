@@ -21,11 +21,14 @@ import Juego.Tablero;
 
 public class Juego {
 
-	private int TAM_CASILLA, PADDING_X, PADDING_Y;
+	public static enum DIRECCION{ARRIBA, DERECHA, ABAJO, IZQUIERDA};
+	
 	private static final Color NEGRO = new Color(169, 169, 169);
 	private static final Color BLANCO = new Color(229, 229, 229);
 	private static final Color SELECCIONADA =  new Color(72, 209, 204);
 
+	private  int TAM_CASILLA, PADDING_X, PADDING_Y;
+	private DIRECCION orientacion;
 	private JLabel casillaSeleccionada;
 	private Controlador controlador;
 	private JPanel jpTablero;
@@ -35,8 +38,8 @@ public class Juego {
 		this.jpTablero = jpTablero;		
 		this.casillaSeleccionada = null;		
 		
-		pintarTablero();
-		
+		this.orientacion = DIRECCION.ARRIBA;		
+		pintarTablero();		
 	}
 
 	private void calcPadding(JPanel jpTablero) {
@@ -50,7 +53,7 @@ public class Juego {
 	}
 	
 	
-	private void pintarTablero() {
+	public void pintarTablero() {
 		this.jpTablero.removeAll();
 		calcPadding(jpTablero);
 
@@ -75,14 +78,14 @@ public class Juego {
 			c = NEGRO;
 		}
 
+
 		jCasilla.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		
-		jCasilla.setBounds(PADDING_X + x * TAM_CASILLA, PADDING_Y + y * TAM_CASILLA, TAM_CASILLA, TAM_CASILLA);
 		jCasilla.setIconTextGap(1);
 		jCasilla.setOpaque(true);
 		jCasilla.setBackground(c);
-		jCasilla.setName(controlador.getCasilla(x, y).getId()+"");
-		
+		jCasilla.setName(controlador.getCasilla(x, y).getId()+"");		
 		jCasilla.addMouseListener(eventClickCasilla());
+		setBounds(x, y, jCasilla);
 		
 		Pieza pieza = controlador.getPieza(x, y);
 		if(pieza != null) {
@@ -100,8 +103,37 @@ public class Juego {
 //		return mapa;
 //	}
 	
+	
+	private void setBounds(int x, int y, JLabel jCasilla) {
+		int xPos = x;
+		int yPos = y;
+
+		switch(orientacion) {
+		case ARRIBA:
+			xPos = x;
+			yPos = y; 
+			break;
+		case ABAJO:
+			xPos = 7 - x;
+			yPos = 7 - y; 
+			break;
+		case IZQUIERDA:
+			xPos = y;
+			yPos = x; 
+			break;
+		case DERECHA:
+			xPos =  7 - y;
+			yPos =  7 - x; 
+			break;
+			
+		}
+		
+		xPos = PADDING_X + xPos * TAM_CASILLA;
+		yPos = PADDING_Y + yPos * TAM_CASILLA; 
+		jCasilla.setBounds(xPos, yPos, TAM_CASILLA, TAM_CASILLA);
+	}
+	
 	private ImageIcon ponerFicha(JLabel jLabel, String pieza){
-		System.out.println(pieza);
 		ImageIcon imageIcon = new ImageIcon("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\img\\"+pieza+".png"); // load the image to a imageIcon
 		Image image = imageIcon.getImage(); // transform it 
 	    Image newimg = image.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
@@ -119,9 +151,9 @@ public class Juego {
 	private MouseAdapter eventClickCasilla() {
 		return new MouseAdapter() {
 			@Override
-			public void mouseClicked(MouseEvent arg0) {
+			public void mousePressed(MouseEvent arg0) {
 				int idOrigen, idDestino;
-				Pieza pieza = null;
+				Pieza piezaDestino, piezaOrigen = null;
 				
 				// Casilla en la que se ha hecho click
 				JLabel casillaActual = (JLabel) arg0.getComponent();
@@ -130,7 +162,7 @@ public class Juego {
 				// Es un movimiento de una pieza
 				if (casillaSeleccionada != null) {
 					idOrigen = Integer.parseInt(casillaSeleccionada.getName());
-					pieza = controlador.getPieza(idOrigen);
+					piezaOrigen = controlador.getPieza(idOrigen);
 					
 					if (controlador.getColorCasilla(idOrigen) == COLOR.BLANCO) {
 						casillaSeleccionada.setBackground(BLANCO);
@@ -138,14 +170,20 @@ public class Juego {
 						casillaSeleccionada.setBackground(NEGRO);
 					}	
 					
-					// Mover pieza
-					if(controlador.mover(idOrigen, idDestino)) {
-						casillaSeleccionada.setIcon(null);
-						ponerFicha(casillaActual, getNombrePieza(pieza));		
-					}
-					
+					piezaDestino = controlador.getPieza(idDestino);					
+					if(piezaDestino != null && piezaDestino.getColor() == piezaOrigen.getColor()) {
+						casillaSeleccionada = casillaActual;
+						casillaSeleccionada.setBackground(SELECCIONADA);
+					} else {
 
-					casillaSeleccionada = null;
+						// Mover pieza
+						if (controlador.mover(idOrigen, idDestino)) {
+							casillaSeleccionada.setIcon(null);
+							ponerFicha(casillaActual, getNombrePieza(piezaOrigen));
+						}
+
+						casillaSeleccionada = null;
+					}
 					
 					
 				} else {
@@ -214,4 +252,15 @@ public class Juego {
 		Pieza pieza = casilla.getPieza();
 		pieza.mover(casilla, new Casilla(5,5));
 	}
+
+	public DIRECCION getOrientacion() {
+		return orientacion;
+	}
+
+	public void setOrientacion(DIRECCION orientacion) {
+		this.orientacion = orientacion;
+	}
+	
+	
+	
 }

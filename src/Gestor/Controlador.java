@@ -16,9 +16,11 @@ import Piezas.Torre;
 public class Controlador {
 
 	private Jugador jugador1, jugador2;
+	private Jugador ganador;
 	private Tablero tablero;
 	private int turno;
 	private Properties prop;
+	
 	
 	public Controlador() {
 
@@ -29,10 +31,10 @@ public class Controlador {
 		} catch (IOException e) {}
 		
 		turno = 0;
-		jugador1 = new Jugador();
-		jugador2 = new Jugador();
-		
-		tablero = new Tablero();	
+		jugador1 = new Jugador(COLOR.BLANCO);
+		jugador2 = new Jugador(COLOR.NEGRO);		
+		ganador = null;		
+		tablero = new Tablero();
 		colocarPiezas();
 	}
 	
@@ -42,9 +44,17 @@ public class Controlador {
 		if(turno % 2 == 0) jugador = jugador1;
 		else jugador = jugador2;
 		
-		turno++;
 		return jugador;
 	}
+	
+	public Jugador getRival() {
+		Jugador jugador;		
+		if(turno % 2 == 1) jugador = jugador1;
+		else jugador = jugador2;
+		
+		return jugador;
+	}
+	
 	
 	
 	public boolean mover(int idOrigen, int idDestino) {
@@ -59,15 +69,23 @@ public class Controlador {
 
 			Pieza mata = destino.ocupar(pieza);
 			if(mata != null) {
-				
+				matar(mata, getRival());
 			}
 			
 			pieza.mover(origen, destino);
 			guardaMovimiento(origen, destino);
+			turno++;
 			return true;
 		} 
 		
 		return false;
+	}
+	
+	private void matar(Pieza pieza, Jugador jugador) {
+		jugador.matar();
+		
+		if(pieza.getNombre() == Pieza.NOMBRE.REY)
+			ganador = getJugadorTurno();
 	}
 	
 	/**
@@ -77,9 +95,15 @@ public class Controlador {
 	 */
 	private boolean puedeMover(Casilla origen, Casilla destino) { 
 	
+		if(ganador != null) 
+			return false;
+		
 		if(origen == null || destino == null || !origen.isOcupada()) return false;		
 		
-		Pieza pieza = origen.getPieza();		
+		Pieza pieza = origen.getPieza();	
+		if(pieza.getColor() != getJugadorTurno().getColor())
+			return false;
+		
 		return (pieza.isValid(origen, destino) && (pieza.isPuedeSaltar() || !hayObstaculos(origen, destino)));
 	}
 	
@@ -129,13 +153,16 @@ public class Controlador {
 		}	
 	}
 	
+	
 	private boolean ponerPieza(int x, int y) {
 
 		if(y > 1 && y < 6 ) return false;
 		
 		Casilla casilla = tablero.getCasilla(x, y);	
 		Pieza pieza = null;	
-		COLOR color = (y <= 1) ? COLOR.BLANCO : COLOR.NEGRO;
+		COLOR color;
+		
+			color = (y <= 1) ?  COLOR.BLANCO : COLOR.NEGRO;
 
 		if (y == 1 || y == 6) {
 			pieza = new Peon(color);

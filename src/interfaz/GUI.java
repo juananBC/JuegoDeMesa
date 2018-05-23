@@ -20,6 +20,7 @@ import com.jgoodies.forms.factories.DefaultComponentFactory;
 
 import Gestor.Controlador;
 import Juego.Tablero;
+import interfaz.Juego.DIRECCION;
 
 import javax.swing.BoxLayout;
 import java.awt.Color;
@@ -32,12 +33,16 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
 public class GUI {
 
 	private JFrame frmAjedrez;
 
-	private static Juego juego;
+	private static Juego juego = null;
 	private static JPanel jpTablero;
 	
 	/**
@@ -50,6 +55,7 @@ public class GUI {
 					System.out.println("Inicio del ajedrez");
 					GUI window = new GUI();
 					window.frmAjedrez.setVisible(true);
+					boolean blancasArriba = false;
 					
 					Controlador gestor = new Controlador();
 					juego = new Juego(gestor, jpTablero);
@@ -82,6 +88,30 @@ public class GUI {
 		JPanel jpControles = new JPanel();
 		jpControles.setBackground(Color.RED);
 		frmAjedrez.getContentPane().add(jpControles, BorderLayout.SOUTH);
+		frmAjedrez.addKeyListener(new KeyAdapter() {
+			@Override
+			public void keyPressed(KeyEvent e) {
+				if(juego != null) {
+					switch(e.getKeyCode()) {
+					case 37: // LEFT
+						juego.setOrientacion(DIRECCION.IZQUIERDA);
+						break;
+					case 38: // UP
+						juego.setOrientacion(DIRECCION.ARRIBA);
+						break;
+					case 39: // RIGHT
+						juego.setOrientacion(DIRECCION.DERECHA);
+						break;
+					case 40: // DOWN
+						juego.setOrientacion(DIRECCION.ABAJO);
+						break;
+					}
+					
+					juego.pintarTablero();
+					jpTablero.repaint();
+				}
+			}
+		});
 		
 		jpTablero = new JPanel();
 		jpTablero.setBackground(new Color(255, 255, 255));
