@@ -8,7 +8,6 @@ import Juego.Movimiento.MOVIMIENTOS;
 public abstract class Pieza {
 	
 	// El negro sera invertido de signo en los movimientos
-	public static enum COLOR{BLANCO, NEGRO};
 	public static enum NOMBRE{REY, REINA, PEON, CABALLO, ALFIL, TORRE};
 	
 	private COLOR color;

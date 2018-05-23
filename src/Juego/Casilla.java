@@ -1,11 +1,9 @@
 package Juego;
 
-import Juego.Casilla.COLOR;
 
 public class Casilla {
 
 	// El negro sera invertido de signo en los movimientos
-	public static enum COLOR{BLANCO, NEGRO};
 	
 	private boolean ocupada;
 	private Pieza pieza;

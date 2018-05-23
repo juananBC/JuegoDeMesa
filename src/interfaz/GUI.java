@@ -18,6 +18,7 @@ import java.awt.FlowLayout;
 import javax.swing.JLabel;
 import com.jgoodies.forms.factories.DefaultComponentFactory;
 
+import Gestor.Controlador;
 import Juego.Tablero;
 
 import javax.swing.BoxLayout;
@@ -50,7 +51,8 @@ public class GUI {
 					GUI window = new GUI();
 					window.frmAjedrez.setVisible(true);
 					
-					juego = new Juego(new Tablero(), jpTablero);
+					Controlador gestor = new Controlador();
+					juego = new Juego(gestor, jpTablero);
 
 				} catch (Exception e) {
 					e.printStackTrace();

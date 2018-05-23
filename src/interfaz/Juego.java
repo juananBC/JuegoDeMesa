@@ -1,7 +1,7 @@
 package interfaz;
 
+import Juego.COLOR;
 import Juego.Casilla;
-import Juego.Casilla.COLOR;
 import Juego.Pieza;
 
 import java.awt.Color;
@@ -16,6 +16,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
+import Gestor.Controlador;
 import Juego.Tablero;
 
 public class Juego {
@@ -26,11 +27,11 @@ public class Juego {
 	private static final Color SELECCIONADA =  new Color(72, 209, 204);
 
 	private JLabel casillaSeleccionada;
-	private Tablero tablero;
+	private Controlador controlador;
 	private JPanel jpTablero;
 	
-	public Juego(Tablero t, JPanel jpTablero) {
-		this.tablero = t;
+	public Juego(Controlador controlador, JPanel jpTablero) {
+		this.controlador = controlador;
 		this.jpTablero = jpTablero;		
 		this.casillaSeleccionada = null;		
 		
@@ -49,35 +50,29 @@ public class Juego {
 	}
 	
 	
-	public void pintarTablero() {
+	private void pintarTablero() {
 		this.jpTablero.removeAll();
 		calcPadding(jpTablero);
 
 		for (int y = 0; y < Tablero.TAMANO; y++) {
 			for (int x = 0; x < Tablero.TAMANO; x++) {
-				Casilla casilla = tablero.getCasilla(x, y);
-				System.out.println(casilla.getX() + " , " + casilla.getY() + "     " + casilla.getId());
-				JLabel jCasilla = pintarCasilla(x, y, casilla);					
+				JLabel jCasilla = pintarCasilla(x, y);					
 				jpTablero.add(jCasilla);				
 			}
 		}
 	}
 	
 	
-	private JLabel pintarCasilla(int x, int y, Casilla casilla) {
-		COLOR color = casilla.getColor();
+	private JLabel pintarCasilla(int x, int y) {
+		COLOR color = controlador.getColorCasilla(x, y);
 
 		JLabel jCasilla = new JLabel("");
 		
 		Color c;
 		if(color == COLOR.BLANCO) {
 			c = BLANCO; 
-		//	jCasilla.setName(COLOR.BLANCO.toString());
-
 		}else {
 			c = NEGRO;
-		//	jCasilla.setName(COLOR.NEGRO.toString());
-
 		}
 
 		jCasilla.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		
@@ -85,11 +80,11 @@ public class Juego {
 		jCasilla.setIconTextGap(1);
 		jCasilla.setOpaque(true);
 		jCasilla.setBackground(c);
-		jCasilla.setName(casilla.getId()+"");
+		jCasilla.setName(controlador.getCasilla(x, y).getId()+"");
 		
 		jCasilla.addMouseListener(eventClickCasilla());
 		
-		Pieza pieza = casilla.getPieza();
+		Pieza pieza = controlador.getPieza(x, y);
 		if(pieza != null) {
 			ponerFicha(jCasilla, getNombrePieza(pieza));
 		}
@@ -125,29 +120,26 @@ public class Juego {
 		return new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				int id;
-				Casilla origen = null, destino = null;
+				int idOrigen, idDestino;
 				Pieza pieza = null;
 				
 				// Casilla en la que se ha hecho click
 				JLabel casillaActual = (JLabel) arg0.getComponent();
-				id = Integer.parseInt(casillaActual.getName());
-				destino = tablero.getCasilla(id);
+				idDestino = Integer.parseInt(casillaActual.getName());
 				
 				// Es un movimiento de una pieza
 				if (casillaSeleccionada != null) {
-					id = Integer.parseInt(casillaSeleccionada.getName());
-					origen = tablero.getCasilla(id);
-					pieza = origen.getPieza();
+					idOrigen = Integer.parseInt(casillaSeleccionada.getName());
+					pieza = controlador.getPieza(idOrigen);
 					
-					if (origen.getColor() == Casilla.COLOR.BLANCO) {
+					if (controlador.getColorCasilla(idOrigen) == COLOR.BLANCO) {
 						casillaSeleccionada.setBackground(BLANCO);
 					} else {
 						casillaSeleccionada.setBackground(NEGRO);
 					}	
 					
 					// Mover pieza
-					if(tablero.mover(origen.getId(), destino.getId())) {
+					if(controlador.mover(idOrigen, idDestino)) {
 						casillaSeleccionada.setIcon(null);
 						ponerFicha(casillaActual, getNombrePieza(pieza));		
 					}
@@ -158,7 +150,7 @@ public class Juego {
 					
 				} else {
 					// Seleccion de una pieza
-					if(destino.isOcupada()) {
+					if(controlador.isCasillaOcupada(idDestino)) {
 						casillaSeleccionada = casillaActual;
 						casillaSeleccionada.setBackground(SELECCIONADA);
 					}

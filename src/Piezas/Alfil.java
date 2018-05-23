@@ -3,6 +3,7 @@ package Piezas;
 import java.util.ArrayList;
 import java.util.List;
 
+import Juego.COLOR;
 import Juego.Casilla;
 import Juego.Movimiento;
 import Juego.Movimiento.MOVIMIENTOS;
