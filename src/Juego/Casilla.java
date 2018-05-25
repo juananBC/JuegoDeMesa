@@ -15,7 +15,7 @@ public class Casilla {
 	public Casilla(Pieza pieza, int x, int y) {
 		this.ocupada = true;
 		this.pieza = pieza;
-		this.id = calcId( x,  y);
+		this.id = calcId(x,  y);
 		this.x = x;
 		this.y = y;
 		this.color = ((this.x + this.y)%2 == 0)? COLOR.BLANCO: COLOR.NEGRO;;
@@ -95,7 +95,7 @@ public class Casilla {
 	
 	
 	private int calcId(int x, int y) {
-		int id = x * Tablero.TAMANO + y;	
+		int id = x + Tablero.TAMANO * y;	
 		return id;
 	}
 	

@@ -5,7 +5,6 @@ import java.util.List;
 
 import Juego.COLOR;
 import Juego.Casilla;
-import Juego.Movimiento;
 import Juego.Movimiento.MOVIMIENTOS;
 import Juego.Pieza;
 
@@ -23,13 +22,7 @@ public class Rey extends Pieza {
 	}
 
 	@Override
-	public boolean matar(Casilla origen, Casilla destino) {
-		// TODO Auto-generated method stub
-		return false;
-	}
-
-	@Override
-	public Casilla mover(Casilla origen, Casilla destino) {
+	public Casilla mover() {
 		// TODO Auto-generated method stub
 		return null;
 	}

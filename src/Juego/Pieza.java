@@ -104,8 +104,7 @@ public abstract class Pieza {
 		return (color == COLOR.BLANCO)? 1:-1;
 		
 	}
-	public abstract boolean matar(Casilla origen, Casilla destino);
-	public abstract Casilla mover(Casilla origen, Casilla destino);
+	public abstract Casilla mover();
 
 
 

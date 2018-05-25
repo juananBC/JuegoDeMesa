@@ -53,8 +53,8 @@ public class Tablero {
 	public Casilla getCasilla(int casilla) {
 		if(casilla < 0 || casilla >= TAMANO_TOTAL) return null;
 		
-		int x = (int) Math.floor(casilla / TAMANO);
-		int y = casilla % TAMANO;
+		int y = (int) Math.floor(casilla / TAMANO);
+		int x = casilla % TAMANO;
 		return casillas[x][y];
 	}
 	
@@ -64,11 +64,12 @@ public class Tablero {
 	 * @return
 	 */
 	public Casilla getCasilla(int x, int y) {
+		if(x <0 || y < 0 || x >= TAMANO|| y >= TAMANO) return null;
 		return this.casillas[x][y];
 	}
 	
-	public void updateCasilla(Casilla casilla, int x, int y) {
-		this.casillas[x][y] = casilla;
+	public void updateCasilla(Casilla casilla) {
+		this.casillas[casilla.getX()][casilla.getY()] = casilla;
 	}
 	
 
