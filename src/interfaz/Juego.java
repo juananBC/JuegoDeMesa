@@ -10,8 +10,11 @@ import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
+import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
@@ -26,18 +29,22 @@ public class Juego {
 	private static final Color NEGRO = new Color(169, 169, 169);
 	private static final Color BLANCO = new Color(229, 229, 229);
 	private static final Color SELECCIONADA =  new Color(72, 209, 204);
+	private static final Color POSIBLE =  new Color(200, 251, 200);
 
 	private  int TAM_CASILLA, PADDING_X, PADDING_Y;
 	private DIRECCION orientacion;
 	private JLabel casillaSeleccionada;
 	private Controlador controlador;
 	private JPanel jpTablero;
+	private List<Integer> casillasPosible;
+	private List<JLabel> casillas;
 	
 	public Juego(Controlador controlador, JPanel jpTablero) {
 		this.controlador = controlador;
 		this.jpTablero = jpTablero;		
 		this.casillaSeleccionada = null;		
-		
+		this.casillas = new ArrayList<JLabel>();
+		this.casillasPosible = new ArrayList<Integer>();
 		this.orientacion = DIRECCION.ARRIBA;		
 		pintarTablero();		
 	}
@@ -55,14 +62,20 @@ public class Juego {
 	
 	public void pintarTablero() {
 		this.jpTablero.removeAll();
+		this.casillas.clear();
 		calcPadding(jpTablero);
 
 		for (int y = 0; y < Tablero.TAMANO; y++) {
-			for (int x = 0; x < Tablero.TAMANO; x++) {
+			for (int x = 0; x< Tablero.TAMANO; x++) {
 				JLabel jCasilla = pintarCasilla(x, y);					
-				jpTablero.add(jCasilla);				
+				jpTablero.add(jCasilla);	
+				casillas.add(jCasilla);
 			}
 		}
+		
+		if(casillaSeleccionada != null) 			
+			posiblesMovimiento(Integer.parseInt(casillaSeleccionada.getName()));
+		
 	}
 	
 	
@@ -70,27 +83,28 @@ public class Juego {
 		COLOR color = controlador.getColorCasilla(x, y);
 
 		JLabel jCasilla = new JLabel("");
+		String casillaId = controlador.getCasilla(x, y).getId()+"";
 		
-		Color c;
-		if(color == COLOR.BLANCO) {
-			c = BLANCO; 
-		}else {
-			c = NEGRO;
-		}
-
-
 		jCasilla.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		
 		jCasilla.setIconTextGap(1);
 		jCasilla.setOpaque(true);
-		jCasilla.setBackground(c);
-		jCasilla.setName(controlador.getCasilla(x, y).getId()+"");		
+		jCasilla.setName(casillaId);		
 		jCasilla.addMouseListener(eventClickCasilla());
 		setBounds(x, y, jCasilla);
 		
+		// Pone la pieza, si tiene.
 		Pieza pieza = controlador.getPieza(x, y);
-		if(pieza != null) {
-			ponerFicha(jCasilla, getNombrePieza(pieza));
+		if(pieza != null) ponerFicha(jCasilla, getNombrePieza(pieza));
+				
+		// Setea el color de la casilla
+		Color c = (color == COLOR.BLANCO)?  BLANCO: NEGRO;
+		if(casillaSeleccionada != null && casillaSeleccionada.getName().equals(casillaId)) {
+			c = SELECCIONADA;
+			casillaSeleccionada = jCasilla;
 		}
+		jCasilla.setBackground(c);
+
+		
 		return jCasilla;
 	}
 	
@@ -158,7 +172,7 @@ public class Juego {
 				// Casilla en la que se ha hecho click
 				JLabel casillaActual = (JLabel) arg0.getComponent();
 				idDestino = Integer.parseInt(casillaActual.getName());
-				
+
 				// Es un movimiento de una pieza
 				if (casillaSeleccionada != null) {
 					idOrigen = Integer.parseInt(casillaSeleccionada.getName());
@@ -170,10 +184,16 @@ public class Juego {
 						casillaSeleccionada.setBackground(NEGRO);
 					}	
 					
-					piezaDestino = controlador.getPieza(idDestino);					
-					if(piezaDestino != null && piezaDestino.getColor() == piezaOrigen.getColor()) {
-						casillaSeleccionada = casillaActual;
-						casillaSeleccionada.setBackground(SELECCIONADA);
+					piezaDestino = controlador.getPieza(idDestino);							
+					if(piezaDestino != null && piezaOrigen != null && piezaDestino.getColor() == piezaOrigen.getColor()) {
+						
+						if(posiblesMovimiento(idDestino) > 0 ) {
+							casillaSeleccionada = casillaActual;
+							casillaSeleccionada.setBackground(SELECCIONADA);
+						}else {
+							casillaSeleccionada = null;
+						}
+						
 					} else {
 
 						// Mover pieza
@@ -184,76 +204,67 @@ public class Juego {
 						}
 
 						casillaSeleccionada = null;
+						eliminarCasillasPosibles(idDestino);
 					}
 					
 					
 				} else {
 					// Seleccion de una pieza
-					if(controlador.isCasillaOcupada(idDestino)) {
-						casillaSeleccionada = casillaActual;
-						casillaSeleccionada.setBackground(SELECCIONADA);
+					if (controlador.isCasillaOcupada(idDestino)) {
+						if (posiblesMovimiento(idDestino) > 0) {
+							casillaSeleccionada = casillaActual;
+							casillaSeleccionada.setBackground(SELECCIONADA);
+						}
+						
 					}
 				}
 
 				
 				
-				
-				
-				
-				
-//				
-//				System.out.println("MUEVE: " );
-//
-//				
-//				// Matar enemigo o mover aliado
-//				if (destino.isOcupada()) {
-//					System.out.println("MATAR " + destino.getPieza().getNombre());
-//
-//					// Matar enemigo
-//					if(casillaSeleccionada != null) {
-//						id = Integer.parseInt(casillaSeleccionada.getName());
-//						destino = tablero.getCasilla(id);
-//						pieza = destino.getPieza();
-//						
-//						casillaSeleccionada.setIcon(null);	
-//						casillaSeleccionada = null;
-//						
-//						ponerFicha(casillaActual, getNombrePieza(pieza));
-//
-//					// Mover aliado
-//					} else {
-//						// Libera la casilla anterior
-//						casillaSeleccionada = casillaActual;
-//						casillaSeleccionada.setBackground(SELECCIONADA);
-//					}
-//					
-//
-//				// Casilla libre --> movimiento de aliado	
-//				} else {	
-//					
-//					
-//					if(casillaSeleccionada == null) return;
-//
-//					id = Integer.parseInt(casillaSeleccionada.getName());
-//					origen = tablero.getCasilla(id);
-//					pieza = origen.getPieza();
-// 
-//					casillaSeleccionada.setIcon(null);
-//					ponerFicha(casillaActual,  getNombrePieza(pieza));
-//					
-//					casillaSeleccionada = null;
-//				}
-//				
 			}
 		};
 	}
 	
 	
-	private void posiblesMovimiento(Casilla casilla) {
-		Pieza pieza = casilla.getPieza();
-		//pieza.mover(casilla, new Casilla(5,5));
+	
+	
+	private int posiblesMovimiento(int idCasilla) {
+		final int T = 255;
+		
+		eliminarCasillasPosibles(idCasilla);
+		
+		casillasPosible = controlador.getOpcionesMover(idCasilla);
+		for(int id: casillasPosible) {
+			JLabel casilla = casillas.get(id);
+			Color color = (controlador.getColorCasilla(id) == COLOR.BLANCO)? BLANCO:NEGRO;
+			color = new Color(color.getRed() * POSIBLE.getRed() / T,
+					color.getGreen() * POSIBLE.getGreen() / T,
+					color.getBlue() * POSIBLE.getBlue() / T
+					);
+			casilla.setBackground(color);
+//			casilla.setBorder(BorderFactory.createMatteBorder(
+//                    5, 5, 5, 5, Color.yellow));
+
+		}
+		
+		return casillasPosible.size();
 	}
 
+	private void eliminarCasillasPosibles(int idCasilla) {
+		JLabel casilla;
+		if(!casillasPosible.isEmpty()) {
+			for(int id: casillasPosible) {
+				casilla = casillas.get(id);
+				Color color = (controlador.getColorCasilla(id) == COLOR.BLANCO)? BLANCO:NEGRO;
+				casilla.setBackground(color);
+				casilla.setBorder(null);
+			}
+		}
+		
+		casillasPosible.clear();
+	}
+	
+	
 	public DIRECCION getOrientacion() {
 		return orientacion;
 	}

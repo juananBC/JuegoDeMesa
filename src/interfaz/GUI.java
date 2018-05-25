@@ -37,6 +37,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.awt.Component;
 
 public class GUI {
 
@@ -44,6 +45,7 @@ public class GUI {
 
 	private static Juego juego = null;
 	private static JPanel jpTablero;
+	private JLabel lblNewLabel;
 	
 	/**
 	 * Launch the application.
@@ -58,6 +60,11 @@ public class GUI {
 					
 					Controlador gestor = new Controlador();
 					juego = new Juego(gestor, jpTablero);
+					
+					JPanel panel = new JPanel();
+					panel.setBackground(new Color(102, 205, 170));
+					window.frmAjedrez.getContentPane().add(panel, BorderLayout.EAST);
+					
 
 				} catch (Exception e) {
 					e.printStackTrace();
@@ -85,6 +92,10 @@ public class GUI {
 		JPanel jpControles = new JPanel();
 		jpControles.setBackground(Color.RED);
 		frmAjedrez.getContentPane().add(jpControles, BorderLayout.SOUTH);
+		
+		lblNewLabel = new JLabel("New label");
+		lblNewLabel.setForeground(new Color(152, 251, 152));
+		jpControles.add(lblNewLabel);
 		frmAjedrez.addKeyListener(new KeyAdapter() {
 			@Override
 			public void keyPressed(KeyEvent e) {
