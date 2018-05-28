@@ -65,8 +65,19 @@ public class Controlador {
 		Casilla casilla = tablero.getCasilla(idCasilla);
 		Pieza pieza = casilla.getPieza();
 		
-		List<MOVIMIENTOS> movs = pieza.getMovimientos(); 
+		List<MOVIMIENTOS> mover = pieza.getMovimientos(); 
+		List<MOVIMIENTOS> matar = pieza.getMatar(); 
 		
+//		mover.addAll(matar);
+		casillas.addAll(getMovimientos(mover, casilla));
+		casillas.addAll(getMovimientos(matar, casilla));
+		return casillas;		
+	}
+	
+	
+	private List<Integer> getMovimientos(List<MOVIMIENTOS> movs, Casilla casilla){
+		List<Integer> casillas = new ArrayList<Integer>();
+
 		for(MOVIMIENTOS mov: movs) {
 			switch (mov) {
 			case HORIZONTAL:
@@ -81,9 +92,7 @@ public class Controlador {
 			}
 		}
 		
-		System.out.println(casillas.toString());
-		return casillas;
-		
+		return casillas;	
 	}
 	
 	public List<Integer> getHorizontales(Casilla origen){
@@ -92,10 +101,9 @@ public class Controlador {
 		int x = origen.getX();
 		int y = origen.getY();
 		
-		int n = 0;
 		int px = 1;
 		int py = 0;
-		while(n < 2) {
+		for(int n = 0; n < 2; n++) {
 			for (int i = 0; i < Tablero.TAMANO; i++) {
 				int X = px*i + py*x;
 				int Y = py*i + px*y;
@@ -106,7 +114,6 @@ public class Controlador {
 			
 			px = 0;
 			py = 1;
-			n++;
 		}
 		
 		return casillas;
@@ -118,19 +125,17 @@ public class Controlador {
 		int x = origen.getX();
 		int y = origen.getY();
 		
-		int n = 0;
 		int dir = 1;
-		while(n < 2) {
+		for(int n = 0; n < 2; n++) {
 			for (int i = 0; i < Tablero.TAMANO; i++) {
 				int X = (i + x) % Tablero.TAMANO;
 				int Y = (Tablero.TAMANO + dir*i + y) % Tablero.TAMANO;
 				Casilla destino = tablero.getCasilla(X, Y);
-				if(puedeMover(origen, destino))
+				if(puedeMover(origen, destino) )
 					casillas.add(destino.getId());
 			}
 			
 			dir = -1;
-			n++;
 		}
 		
 		return casillas;
@@ -139,29 +144,31 @@ public class Controlador {
 	public List<Integer> getLs(Casilla origen){
 		List<Integer> casillas = new ArrayList<Integer>();
 
+		String mask;
 		int x = origen.getX();
 		int y = origen.getY();
+		int j;
 		
-		int dir = 1;
 		for (int i = 1; i < 3; i++) {
-			int j = (i == 1)? 2:1;
+			j = (i == 1)? 2:1;
 
 			for (int n = 0; n < 4; n++) {
-				String bit = "0"+Integer.toBinaryString(n);
-
-				bit = bit.substring(bit.length() -2, bit.length());
-				int X = (bit.charAt(1) == '0' )? 1:-1;
-				int Y = (bit.charAt(0) == '0' )? 1:-1;
+				mask = "0"+Integer.toBinaryString(n);
+				
+				// Coje los 2 ultimos bits
+				mask = mask.substring(mask.length() -2, mask.length());
+				int X = (mask.charAt(1) == '0' )? 1:-1;
+				int Y = (mask.charAt(0) == '0' )? 1:-1;
 				X = X*i + x;
 				Y = Y*j + y;
+				
 				Casilla destino = tablero.getCasilla(X, Y);
+				
 				if (puedeMover(origen, destino))
 					casillas.add(destino.getId());
 			}
 
 		}
-
-		dir = -1;
 		
 		
 		return casillas;

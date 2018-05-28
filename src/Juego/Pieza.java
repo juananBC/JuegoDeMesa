@@ -15,6 +15,7 @@ public abstract class Pieza {
 	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
 	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
 	private NOMBRE nombre; 
+	private int valorMuerte;
 	
 	public NOMBRE getNombre() {
 		return nombre;
@@ -28,21 +29,23 @@ public abstract class Pieza {
 	private List<MOVIMIENTOS> movimientos;
 	private List<MOVIMIENTOS> matar;
 	
-	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
+	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) { //, int valorMuerte) {
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = libre;
 		this.puedeSaltar = puedeSaltar;
 		this.nombre = nombre;
+//		this.valorMuerte = valorMuerte;
 	}
 	
 	
-	public Pieza(COLOR color, int distancia, NOMBRE nombre) {
+	public Pieza(COLOR color, int distancia, NOMBRE nombre) { //, int valorMuerte) {
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = true;
 		this.puedeSaltar = false;
 		this.nombre = nombre;
+//		this.valorMuerte = valorMuerte;
 	}
 
 
@@ -54,7 +57,6 @@ public abstract class Pieza {
 	 */
 	public boolean isValid(Casilla origen, Casilla destino)  {
 		
-		int direccion = mueveHacia();
 		
 		int x = destino.getX() - origen.getX();
 		int y = destino.getY() - origen.getY() ;
@@ -89,9 +91,9 @@ public abstract class Pieza {
 	}
 	
 	public boolean matarValido(Movimiento m, Casilla origen, Casilla destino) {
+
 		if( destino.getPieza() == null || destino.getPieza().getColor() == this.getColor()) return false;
-		
-		
+				
 		for(MOVIMIENTOS movimiento : matar) {				
 			if(m.checkMovimiento(movimiento, this)) {				
 				return true;

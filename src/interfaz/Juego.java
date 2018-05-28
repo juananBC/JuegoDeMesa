@@ -94,7 +94,7 @@ public class Juego {
 		
 		// Pone la pieza, si tiene.
 		Pieza pieza = controlador.getPieza(x, y);
-		if(pieza != null) ponerFicha(jCasilla, getNombrePieza(pieza));
+		if(pieza != null) ponerFicha(jCasilla, getNombrePieza(pieza), 0);
 				
 		// Setea el color de la casilla
 		Color c = (color == COLOR.BLANCO)?  BLANCO: NEGRO;
@@ -147,10 +147,11 @@ public class Juego {
 		jCasilla.setBounds(xPos, yPos, TAM_CASILLA, TAM_CASILLA);
 	}
 	
-	private ImageIcon ponerFicha(JLabel jLabel, String pieza){
+	private ImageIcon ponerFicha(JLabel jLabel, String pieza, int borde){
+
 		ImageIcon imageIcon = new ImageIcon("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\img\\"+pieza+".png"); // load the image to a imageIcon
 		Image image = imageIcon.getImage(); // transform it 
-	    Image newimg = image.getScaledInstance(jLabel.getWidth(), jLabel.getHeight(),  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
+	    Image newimg = image.getScaledInstance(jLabel.getWidth() + borde, jLabel.getHeight() + borde,  java.awt.Image.SCALE_SMOOTH); // scale it the smooth way  
 	    imageIcon = new ImageIcon(newimg);  // transform it back
 	    
 	    jLabel.setIcon(imageIcon);
@@ -200,7 +201,7 @@ public class Juego {
 						if (controlador.mover(idOrigen, idDestino)) {
 							casillaSeleccionada.setIcon(null);
 							piezaDestino = controlador.getPieza(idDestino);
-							ponerFicha(casillaActual, getNombrePieza(piezaDestino));
+							ponerFicha(casillaActual, getNombrePieza(piezaDestino), 0);
 						}
 
 						casillaSeleccionada = null;
@@ -237,13 +238,21 @@ public class Juego {
 		for(int id: casillasPosible) {
 			JLabel casilla = casillas.get(id);
 			Color color = (controlador.getColorCasilla(id) == COLOR.BLANCO)? BLANCO:NEGRO;
-			color = new Color(color.getRed() * POSIBLE.getRed() / T,
-					color.getGreen() * POSIBLE.getGreen() / T,
-					color.getBlue() * POSIBLE.getBlue() / T
+//			color = new Color(color.getRed() * POSIBLE.getRed() / T,
+//					color.getGreen() * POSIBLE.getGreen() / T,
+//					color.getBlue() * POSIBLE.getBlue() / T
+//					);
+			color = new Color(BLANCO.getRed() * POSIBLE.getRed() / T,
+					BLANCO.getGreen() * POSIBLE.getGreen() / T,
+					BLANCO.getBlue() * POSIBLE.getBlue() / T
 					);
-			casilla.setBackground(color);
-//			casilla.setBorder(BorderFactory.createMatteBorder(
-//                    5, 5, 5, 5, Color.yellow));
+			casilla.setBackground((controlador.getPieza(idCasilla).getColor() == COLOR.BLANCO)? Color.WHITE:Color.BLACK);
+			casilla.setBorder(BorderFactory.createMatteBorder(
+                    5,5,5,5, (controlador.getColorCasilla(id) == COLOR.BLANCO)? BLANCO:NEGRO));
+			
+
+			
+
 
 		}
 		
