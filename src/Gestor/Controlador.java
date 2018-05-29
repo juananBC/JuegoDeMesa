@@ -5,6 +5,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Properties;
+import java.util.Stack;
 
 import Juego.*;
 import Juego.Movimiento.MOVIMIENTOS;
@@ -15,6 +16,7 @@ import Piezas.Peon;
 import Piezas.Reina;
 import Piezas.Rey;
 import Piezas.Torre;
+import inteligencia.IA;
 
 public class Controlador {
 
@@ -23,25 +25,56 @@ public class Controlador {
 	private Tablero tablero;
 	private int turno;
 	private Properties prop;
+	private Stack<Estado> pila;
 	
 	
 	public Controlador() {
-
 		prop = new Properties();
 		
 		try {
 			prop.load(new FileInputStream("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\config"));
 		} catch (IOException e) {}
 		
+		pila = new Stack<Estado>();
 		turno = 0;
 		jugador1 = new Jugador(COLOR.BLANCO);
 		jugador2 = new Jugador(COLOR.NEGRO);		
 		ganador = null;		
 		tablero = new Tablero();
 		colocarPiezas();
+
+		IA ia = new IA(3);
+		ia.calculaMovimiento(tablero, COLOR.NEGRO);
+	}
+	
+	public Controlador(Tablero tablero, int turno) {
+		
+		turno = 0;
+		jugador1 = new Jugador(COLOR.BLANCO);
+		jugador2 = new Jugador(COLOR.NEGRO);		
+		ganador = null;		
+		this.tablero = new Tablero();
 	}
 	
 
+	public void revertir() {
+		
+		if(pila.empty()) return;
+		
+		Estado estado = pila.pop();
+		
+		Casilla destino = getCasilla(estado.getIdDestino());
+		Casilla origen = getCasilla(estado.getIdOrigen());
+		
+		Pieza aux = destino.getPieza();
+		aux.retrasar();
+		
+		destino.setPieza(estado.getMata());
+		origen.setPieza(aux);
+		
+		turno = estado.getTurno();
+	}
+	
 	public Jugador getJugadorTurno() {
 		Jugador jugador;		
 		if(turno % 2 == 0) jugador = jugador1;
@@ -189,10 +222,12 @@ public class Controlador {
 				matar(mata, getRival());
 			}
 			
-			pieza.mover();
-			convertirPeon(destino, pieza);
-			guardaMovimiento(origen, destino);
+			pieza.avanzar();
+			pieza = convertirPeon(destino, pieza);
+			guardaMovimiento(mata, origen, destino);
 			turno++;
+			
+			
 			return true;
 		} 
 		
@@ -270,9 +305,13 @@ public class Controlador {
 	}
 	
 	
-	private void guardaMovimiento(Casilla origen, Casilla destino) {
+	private void guardaMovimiento(Pieza mata, Casilla origen, Casilla destino) {
 		tablero.updateCasilla(origen);
 		tablero.updateCasilla(destino);
+		
+//		Pieza pieza = destino.getPieza();
+		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno);
+		pila.push(estado);
 	}
 	
 	
@@ -317,7 +356,6 @@ public class Controlador {
 				pieza = new Alfil(color);
 				break;
 			default:
-
 				break;
 			}
 		}

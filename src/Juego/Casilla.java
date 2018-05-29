@@ -87,9 +87,7 @@ public class Casilla {
 	}
 
 	public void setPieza(Pieza pieza) {
-		if(pieza == null) this.ocupada = false;
-		else this.ocupada = true;
-		
+		this.ocupada = (pieza != null);		
 		this.pieza = pieza;
 	}
 	

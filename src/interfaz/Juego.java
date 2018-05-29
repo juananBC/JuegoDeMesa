@@ -163,6 +163,12 @@ public class Juego {
 		return  pieza.getNombre() + "-" + pieza.getColor().toString().charAt(0);
 	}
 	
+	public void revertir() {		
+		controlador.revertir();
+		pintarTablero();
+	}
+	
+	
 	private MouseAdapter eventClickCasilla() {
 		return new MouseAdapter() {
 			@Override

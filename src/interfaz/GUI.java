@@ -46,7 +46,6 @@ public class GUI {
 	private static Juego juego = null;
 	private static JPanel jpTablero;
 	private JLabel lblNewLabel;
-	
 	/**
 	 * Launch the application.
 	 */
@@ -58,7 +57,7 @@ public class GUI {
 					GUI window = new GUI();
 					window.frmAjedrez.setVisible(true);
 					
-					Controlador gestor = new Controlador();
+					 Controlador gestor = new Controlador();
 					juego = new Juego(gestor, jpTablero);
 					
 					JPanel panel = new JPanel();
@@ -94,6 +93,15 @@ public class GUI {
 		frmAjedrez.getContentPane().add(jpControles, BorderLayout.SOUTH);
 		
 		lblNewLabel = new JLabel("New label");
+		lblNewLabel.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent arg0) {
+				juego.revertir();				
+				jpTablero.repaint();
+				
+			}
+		});
+		
 		lblNewLabel.setForeground(new Color(152, 251, 152));
 		jpControles.add(lblNewLabel);
 		frmAjedrez.addKeyListener(new KeyAdapter() {

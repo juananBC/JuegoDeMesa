@@ -24,9 +24,10 @@ public class Peon extends Pieza {
 
 	@Override
 	public Casilla mover() {
-		
 		// Despues del primer movimiento, los peones solo pueden moverse una posicion
-		this.setDistancia(1);
+		if(getNumPasos() > 0)	this.setDistancia(1);
+		else this.setDistancia(2);
+		
 		return null;
 	}
 

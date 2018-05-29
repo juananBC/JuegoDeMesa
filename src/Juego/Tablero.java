@@ -1,17 +1,9 @@
 package Juego;
 
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
+
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Properties;
 
-import javax.swing.JLabel;
-
-import Excepciones.MovimientoNoValido;
-import Juego.Pieza.NOMBRE;
-import Piezas.*;
 
 public class Tablero {
 
@@ -72,6 +64,18 @@ public class Tablero {
 		this.casillas[casilla.getX()][casilla.getY()] = casilla;
 	}
 	
-
+	
+	public Tablero copiarEstado() {
+		Tablero t = new Tablero();
+		
+		for (int y = 0; y < Tablero.TAMANO; y++) {
+			for (int x = 0; x < Tablero.TAMANO; x++) {
+				Pieza p = this.getCasilla(x, y).getPieza();					
+				t.getCasilla(x, y).setPieza(p);				
+			}
+		}
+		
+		return t;
+	}
 	
 }

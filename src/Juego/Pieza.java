@@ -1,6 +1,9 @@
 package Juego;
 
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.List;
+import java.util.Properties;
 
 import Excepciones.MovimientoNoValido;
 import Juego.Movimiento.MOVIMIENTOS;
@@ -10,45 +13,57 @@ public abstract class Pieza {
 	// El negro sera invertido de signo en los movimientos
 	public static enum NOMBRE{REY, REINA, PEON, CABALLO, ALFIL, TORRE};
 	
+	public static Properties prop = null;
+	
 	private COLOR color;
 	private int distancia; 		// Cantidad de pasos que puede moverse
 	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
 	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
 	private NOMBRE nombre; 
 	private int valorMuerte;
+	private int numPasos;		// Cantidad de pasos que se ha movido
 	
-	public NOMBRE getNombre() {
-		return nombre;
-	}
-
-
-	public void setNombre(NOMBRE nombre) {
-		this.nombre = nombre;
-	}
-
 	private List<MOVIMIENTOS> movimientos;
 	private List<MOVIMIENTOS> matar;
 	
-	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) { //, int valorMuerte) {
+	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = libre;
 		this.puedeSaltar = puedeSaltar;
 		this.nombre = nombre;
-//		this.valorMuerte = valorMuerte;
+		this.numPasos = 0;
+		initValorMuerte();
+		
 	}
 	
 	
-	public Pieza(COLOR color, int distancia, NOMBRE nombre) { //, int valorMuerte) {
+	public Pieza(COLOR color, int distancia, NOMBRE nombre) { 
+		
 		this.color = color;
 		this.distancia = distancia;
 		this.libre = true;
 		this.puedeSaltar = false;
 		this.nombre = nombre;
-//		this.valorMuerte = valorMuerte;
+		this.numPasos = 0;
+		
+		initValorMuerte();
 	}
 
 
+	private void initValorMuerte() {
+		try {
+			if(prop == null) {
+				prop = new Properties();
+				prop.load(new FileInputStream("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\config"));
+			}
+			
+			String nombrePieza = this.getClass().getSimpleName();
+			this.valorMuerte = Integer.parseInt(prop.getProperty(nombrePieza, "0"));
+		} catch (IOException e) {}
+	}
+	
+	
 	/**
 	 * 
 	 * @param origen
@@ -108,7 +123,15 @@ public abstract class Pieza {
 	}
 	public abstract Casilla mover();
 
+	public void avanzar() {
+		numPasos++;
+		mover();
+	}
 
+	public void retrasar() {
+		numPasos--;
+		mover();
+	}
 
 	public COLOR getColor() {
 		return color;
@@ -170,6 +193,36 @@ public abstract class Pieza {
 		return puedeSaltar;
 	}
 	
+	
+	
+	public NOMBRE getNombre() {
+		return nombre;
+	}
+
+
+	public void setNombre(NOMBRE nombre) {
+		this.nombre = nombre;
+	}
+
+
+	public int getValorMuerte() {
+		return valorMuerte;
+	}
+
+
+	public void setValorMuerte(int valorMuerte) {
+		this.valorMuerte = valorMuerte;
+	}
+
+
+	public int getNumPasos() {
+		return numPasos;
+	}
+
+
+	public void setNumPasos(int numPasos) {
+		this.numPasos = numPasos;
+	}
 	
 	
 }
