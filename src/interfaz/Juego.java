@@ -12,7 +12,9 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
@@ -36,7 +38,7 @@ public class Juego {
 	private JLabel casillaSeleccionada;
 	private Controlador controlador;
 	private JPanel jpTablero;
-	private List<Integer> casillasPosible;
+	private Set<Integer> casillasPosible;
 	private List<JLabel> casillas;
 	
 	public Juego(Controlador controlador, JPanel jpTablero) {
@@ -44,7 +46,7 @@ public class Juego {
 		this.jpTablero = jpTablero;		
 		this.casillaSeleccionada = null;		
 		this.casillas = new ArrayList<JLabel>();
-		this.casillasPosible = new ArrayList<Integer>();
+		this.casillasPosible = new HashSet<Integer>();
 		this.orientacion = DIRECCION.ARRIBA;		
 		pintarTablero();		
 	}

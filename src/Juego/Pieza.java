@@ -2,8 +2,8 @@ package Juego;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.List;
 import java.util.Properties;
+import java.util.Set;
 
 import Excepciones.MovimientoNoValido;
 import Juego.Movimiento.MOVIMIENTOS;
@@ -23,8 +23,8 @@ public abstract class Pieza {
 	private int valorMuerte;
 	private int numPasos;		// Cantidad de pasos que se ha movido
 	
-	private List<MOVIMIENTOS> movimientos;
-	private List<MOVIMIENTOS> matar;
+	private Set<MOVIMIENTOS> movimientos;
+	private Set<MOVIMIENTOS> matar;
 	
 	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
 		this.color = color;
@@ -33,8 +33,8 @@ public abstract class Pieza {
 		this.puedeSaltar = puedeSaltar;
 		this.nombre = nombre;
 		this.numPasos = 0;
-		initValorMuerte();
 		
+		initValorMuerte();		
 	}
 	
 	
@@ -72,6 +72,8 @@ public abstract class Pieza {
 	 */
 	public boolean isValid(Casilla origen, Casilla destino)  {
 		
+		Pieza pDestino = destino.getPieza();
+		if(pDestino != null && this.getColor() == pDestino.getColor()) return false;
 		
 		int x = destino.getX() - origen.getX();
 		int y = destino.getY() - origen.getY() ;
@@ -79,11 +81,7 @@ public abstract class Pieza {
 		// Obtiene el movimiento realizado
 		Movimiento mov = new Movimiento(x, y);
 		
-		Pieza pDestino = destino.getPieza();
-		if(pDestino != null && this.getColor() == pDestino.getColor()) return false;
-		
-		
-		if(movimientoValido(mov, origen, destino) || matarValido(mov, origen, destino)) {	
+		if(movimientoValido(mov, origen, destino) ||	matarValido(mov, origen, destino)) {	
 			 return true;	
 		}
 		
@@ -93,11 +91,11 @@ public abstract class Pieza {
 	
 	public boolean movimientoValido(Movimiento m, Casilla origen, Casilla destino) {
 		
-		if(destino.getPieza() != null) return false;
+		if(destino.isOcupada()) return false;		
 		
 		for(MOVIMIENTOS movimiento : movimientos) {	
 			
-			if(m.checkMovimiento(movimiento, this)) {				
+			if(m.checkMovimiento(movimiento, this)) {
 				return true;
 			}
 		}
@@ -107,7 +105,9 @@ public abstract class Pieza {
 	
 	public boolean matarValido(Movimiento m, Casilla origen, Casilla destino) {
 
-		if( destino.getPieza() == null || destino.getPieza().getColor() == this.getColor()) return false;
+		if( !destino.isOcupada() 
+				|| destino.getPieza().getColor() == color) 
+			return false;
 				
 		for(MOVIMIENTOS movimiento : matar) {				
 			if(m.checkMovimiento(movimiento, this)) {				
@@ -124,11 +124,14 @@ public abstract class Pieza {
 	public abstract Casilla mover();
 
 	public void avanzar() {
+		System.out.println("MOVER " + this.getClass().getName());
 		numPasos++;
 		mover();
 	}
 
 	public void retrasar() {
+		System.out.println("RETRASAR " + this.getClass().getName());
+
 		numPasos--;
 		mover();
 	}
@@ -145,25 +148,25 @@ public abstract class Pieza {
 
 
 
-	public List<MOVIMIENTOS> getMovimientos() {
+	public Set<MOVIMIENTOS> getMovimientos() {
 		return movimientos;
 	}
 
 
 
-	public void setMovimientos(List<MOVIMIENTOS> movimientos) {
+	public void setMovimientos(Set<MOVIMIENTOS> movimientos) {
 		this.movimientos = movimientos;
 	}
 
 
 
-	public List<MOVIMIENTOS> getMatar() {
+	public Set<MOVIMIENTOS> getMatar() {
 		return matar;
 	}
 
 
 
-	public void setMatar(List<MOVIMIENTOS> matar) {
+	public void setMatar(Set<MOVIMIENTOS> matar) {
 		this.matar = matar;
 	}
 	

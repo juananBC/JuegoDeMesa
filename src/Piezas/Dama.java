@@ -1,7 +1,9 @@
 package Piezas;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import Juego.COLOR;
 import Juego.Casilla;
@@ -15,7 +17,7 @@ public class Dama  extends Pieza{
 		super(color, Tablero.TAMANO - 1, NOMBRE.PEON);		
 		
 		// Movimientos en diagonal
-		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
+		Set<MOVIMIENTOS> movimientos = new HashSet<MOVIMIENTOS>();		
 		movimientos.add(MOVIMIENTOS.HORIZONTAL);	
 		movimientos.add(MOVIMIENTOS.DIAGONAL);
 		

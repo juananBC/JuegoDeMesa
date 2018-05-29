@@ -3,11 +3,20 @@ package inteligencia;
 import java.util.ArrayList;
 import java.util.List;
 
+import Gestor.Estado;
+import Juego.COLOR;
+import Juego.Pieza;
+
 public class Nodo {
 
 	private Estado estado;
 	private List<Nodo> hijos;
 	private Nodo parent;
+	
+	public Nodo(COLOR color) {
+		this.parent = null;
+		this.estado = new Estado(null, 1,1, 0, color);
+	}
 	
 	public Nodo(Nodo parent, Estado estado) {
 		this.parent = parent;
@@ -16,13 +25,19 @@ public class Nodo {
 	}
 	
 	
-	public void addHijo(Estado value) {
-		Nodo hijo = new Nodo(this, value);		
+//	public Nodo addHijo(Estado estado) {
+//		Nodo hijo = new Nodo(this, estado);		
+//		hijos.add(hijo);
+//		
+//		return hijo;
+//	}
+	
+	public void addHijo(Nodo hijo) {	
 		hijos.add(hijo);		
 	}
 
 	public int getValor() {
-		return estado.getValor();
+		return estado.getPuntuacion();
 	}
 	
 	public Estado getEstado() {

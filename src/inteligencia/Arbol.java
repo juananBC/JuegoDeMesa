@@ -1,15 +1,14 @@
 package inteligencia;
 
-import Juego.Tablero;
+import Gestor.Estado;
+import Juego.COLOR;
 
 public class Arbol {
 
-	
 	private Nodo raiz;
 	
-	public Arbol(Tablero t) {
-		Estado estado = new Estado(t, -1, -1, Integer.MIN_VALUE);		
-		raiz = new Nodo(null, estado);
+	public Arbol(COLOR color) {		
+		raiz = new Nodo(null, new Estado(null, -1, -1, 0, color));
 	}
 
 	public Nodo getRaiz() {

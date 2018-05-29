@@ -1,7 +1,7 @@
 package Piezas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import Juego.COLOR;
 import Juego.Casilla;
@@ -13,7 +13,7 @@ public class Rey extends Pieza {
 	public Rey(COLOR color) {
 		super(color, 2, NOMBRE.REY);
 
-		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
+		Set<MOVIMIENTOS> movimientos = new HashSet<MOVIMIENTOS>();		
 		movimientos.add(MOVIMIENTOS.HORIZONTAL);
 		movimientos.add(MOVIMIENTOS.DIAGONAL);		
 		setMovimientos(movimientos);		

@@ -1,7 +1,7 @@
 package Piezas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import Juego.COLOR;
 import Juego.Casilla;
@@ -13,13 +13,14 @@ public class Peon extends Pieza {
 	public Peon(COLOR color) {
 		super(color, 2, false, false, NOMBRE.PEON);
 		
-		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();	
-		movimientos.add(MOVIMIENTOS.HORIZONTAL);
-		setMovimientos(movimientos);	
+		Set<MOVIMIENTOS> movs = new HashSet<MOVIMIENTOS>();	
+		movs.add(MOVIMIENTOS.HORIZONTAL);
+		this.setMovimientos(movs);	
 		
-		List<MOVIMIENTOS> matar = new ArrayList<MOVIMIENTOS>();	
+		Set<MOVIMIENTOS> matar = new HashSet<MOVIMIENTOS>();	
 		matar.add(MOVIMIENTOS.DIAGONAL);
-		setMatar(matar);			
+		
+		this.setMatar(matar);			
 	}
 
 	@Override

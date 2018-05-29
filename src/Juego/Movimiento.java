@@ -56,7 +56,6 @@ public class Movimiento {
 	public boolean isDiagonal(Pieza p) {
 
 		if(limitarDireccion(p)) {
-			System.out.println("LIMITA DIAGONAL");
 			return false;
 		}
 
@@ -71,7 +70,6 @@ public class Movimiento {
 
 	public boolean isHorizontal(Pieza p) {
 		if(limitarDireccion(p)) {
-			System.out.println("LIMITA HORIZONTAL");
 			return false;
 		}
 

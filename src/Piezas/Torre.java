@@ -1,7 +1,7 @@
 package Piezas;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import Juego.COLOR;
 import Juego.Casilla;
@@ -15,7 +15,7 @@ public class Torre  extends Pieza{
 		super(color, Tablero.TAMANO - 1, NOMBRE.TORRE);		
 		
 		// Movimientos en diagonal
-		List<MOVIMIENTOS> movimientos = new ArrayList<MOVIMIENTOS>();		
+		Set<MOVIMIENTOS> movimientos = new HashSet<MOVIMIENTOS>();		
 		movimientos.add(MOVIMIENTOS.HORIZONTAL);
 		
 		setMovimientos(movimientos);		

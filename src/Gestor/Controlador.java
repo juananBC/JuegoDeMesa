@@ -3,8 +3,9 @@ package Gestor;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Properties;
+import java.util.Set;
 import java.util.Stack;
 
 import Juego.*;
@@ -43,8 +44,8 @@ public class Controlador {
 		tablero = new Tablero();
 		colocarPiezas();
 
-		IA ia = new IA(3);
-		ia.calculaMovimiento(tablero, COLOR.NEGRO);
+		IA ia = new IA(this, 4, COLOR.NEGRO);
+		ia.calculaMovimiento(tablero);
 	}
 	
 	public Controlador(Tablero tablero, int turno) {
@@ -57,8 +58,7 @@ public class Controlador {
 	}
 	
 
-	public void revertir() {
-		
+	public void revertir() {		
 		if(pila.empty()) return;
 		
 		Estado estado = pila.pop();
@@ -91,26 +91,26 @@ public class Controlador {
 		return jugador;
 	}
 	
-	
-	public List<Integer> getOpcionesMover(int idCasilla) {
-		List<Integer> casillas = new ArrayList<Integer>();
+	public Jugador getJugadorActual() {
+		Jugador jugador;		
+		if(turno % 2 == 0) jugador = jugador1;
+		else jugador = jugador2;
 		
-		Casilla casilla = tablero.getCasilla(idCasilla);
-		Pieza pieza = casilla.getPieza();
-		
-		List<MOVIMIENTOS> mover = pieza.getMovimientos(); 
-		List<MOVIMIENTOS> matar = pieza.getMatar(); 
-		
-//		mover.addAll(matar);
-		casillas.addAll(getMovimientos(mover, casilla));
-		casillas.addAll(getMovimientos(matar, casilla));
-		return casillas;		
+		return jugador;
 	}
 	
 	
-	private List<Integer> getMovimientos(List<MOVIMIENTOS> movs, Casilla casilla){
-		List<Integer> casillas = new ArrayList<Integer>();
+	public Set<Integer> getOpcionesMover(int idCasilla) {		
+		Casilla casilla = tablero.getCasilla(idCasilla);
 
+		Pieza pieza = casilla.getPieza();		
+		if(pieza == null) return null;
+		
+		Set<Integer> casillas = new HashSet<Integer>();
+		Set<MOVIMIENTOS> movs = new HashSet<MOVIMIENTOS>();
+		movs.addAll(pieza.getMovimientos()); 
+		movs.addAll(pieza.getMatar());	
+		
 		for(MOVIMIENTOS mov: movs) {
 			switch (mov) {
 			case HORIZONTAL:
@@ -128,8 +128,9 @@ public class Controlador {
 		return casillas;	
 	}
 	
-	public List<Integer> getHorizontales(Casilla origen){
-		List<Integer> casillas = new ArrayList<Integer>();
+	
+	public Set<Integer> getHorizontales(Casilla origen){
+		Set<Integer> casillas = new HashSet<Integer>();
 
 		int x = origen.getX();
 		int y = origen.getY();
@@ -152,8 +153,8 @@ public class Controlador {
 		return casillas;
 	}
 	
-	public List<Integer> getDiagonales(Casilla origen){
-		List<Integer> casillas = new ArrayList<Integer>();
+	public Set<Integer> getDiagonales(Casilla origen){
+		Set<Integer> casillas = new HashSet<Integer>();
 
 		int x = origen.getX();
 		int y = origen.getY();
@@ -174,8 +175,8 @@ public class Controlador {
 		return casillas;
 	}
 	
-	public List<Integer> getLs(Casilla origen){
-		List<Integer> casillas = new ArrayList<Integer>();
+	public Set<Integer> getLs(Casilla origen){
+		Set<Integer> casillas = new HashSet<Integer>();
 
 		String mask;
 		int x = origen.getX();
@@ -310,7 +311,7 @@ public class Controlador {
 		tablero.updateCasilla(destino);
 		
 //		Pieza pieza = destino.getPieza();
-		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno);
+		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno, destino.getPieza().getColor());
 		pila.push(estado);
 	}
 	
@@ -367,6 +368,12 @@ public class Controlador {
 	}
 
 
+	public Estado getUltimoMovimiento() {
+		if(pila.empty()) return null;
+		
+		return pila.peek();
+	}
+	
 	public Casilla getCasilla(int x, int y) {
 		return tablero.getCasilla(x, y);
 	}
