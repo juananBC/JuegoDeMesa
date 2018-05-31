@@ -124,13 +124,13 @@ public abstract class Pieza {
 	public abstract Casilla mover();
 
 	public void avanzar() {
-		System.out.println("MOVER " + this.getClass().getName());
+//		System.out.println("MOVER " + this.getClass().getName());
 		numPasos++;
 		mover();
 	}
 
 	public void retrasar() {
-		System.out.println("RETRASAR " + this.getClass().getName());
+//		System.out.println("RETRASAR " + this.getClass().getName());
 
 		numPasos--;
 		mover();

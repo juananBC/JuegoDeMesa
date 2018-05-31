@@ -33,11 +33,20 @@ public class Nodo {
 //	}
 	
 	public void addHijo(Nodo hijo) {	
-		hijos.add(hijo);		
+		if(hijo != null)
+			hijos.add(hijo);		
 	}
 
 	public int getValor() {
 		return estado.getPuntuacion();
+	}
+	
+	public void setTerminal() {
+		this.hijos = null;
+	}
+	
+	public boolean isTerminal() {
+		return hijos == null || estado.finJuego();
 	}
 	
 	public Estado getEstado() {
@@ -68,16 +77,16 @@ public class Nodo {
 	public Nodo getParent() {
 		return parent;
 	}
+	
+	public boolean hasParent() {
+		return parent != null;
+	}
 
 
 	public void setParent(Nodo parent) {
 		this.parent = parent;
 	}
-	
-	
-	public boolean isTerminal() {
-		return hijos == null || hijos.isEmpty();
-	}
+
 	
 	
 }

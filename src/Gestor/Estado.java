@@ -2,13 +2,24 @@ package Gestor;
 
 import Juego.COLOR;
 import Juego.Pieza;
+import Juego.Pieza.NOMBRE;
 
-public class Estado {
+public class Estado  {
 	private Pieza mata;
 	private int idOrigen, idDestino;
 	private int turno;
 	private int puntuacion;
 	private COLOR color;
+	
+	
+	public Estado(int turno, COLOR color, int puntuacion) {
+		this.mata = null;
+		this.idDestino = -1;
+		this.idOrigen = -1;
+		this.turno = turno;
+		this.color = color;
+		this.puntuacion = puntuacion; //(mata == null)? 0:mata.getValorMuerte();
+	}
 	
 	public Estado(Pieza mata, int idOrigen, int idDestino, int turno, COLOR color){
 		this.mata = mata;
@@ -19,6 +30,29 @@ public class Estado {
 		this.puntuacion = (mata == null)? 0:mata.getValorMuerte();
 	}
 
+	public static Estado max(Estado e1, Estado e2) {
+		if(e1.getPuntuacion() >= e2.getPuntuacion()){
+			return e1;
+		}		
+		return e2;
+	}
+	
+	public static Estado min(Estado e1, Estado e2) {
+		if(e1.getPuntuacion() <= e2.getPuntuacion()){
+			return e1;
+		}		
+		return e2;
+	}
+	
+	public void actualizaPuntos(int puntos) {
+		this.puntuacion += puntos;
+	}
+	
+	
+	public boolean finJuego() {
+		return mata != null && mata.getNombre() == NOMBRE.REY;
+	}
+	
 	public Pieza getMata() {
 		return mata;
 	}

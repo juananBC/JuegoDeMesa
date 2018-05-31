@@ -22,6 +22,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 
 import Gestor.Controlador;
+import Gestor.Estado;
 import Juego.Tablero;
 
 public class Juego {
@@ -210,6 +211,15 @@ public class Juego {
 							casillaSeleccionada.setIcon(null);
 							piezaDestino = controlador.getPieza(idDestino);
 							ponerFicha(casillaActual, getNombrePieza(piezaDestino), 0);
+
+							Estado estado = controlador.moverAgente();
+//							if(estado != null) {
+//								casillaActual = casillas.get(estado.getIdOrigen());
+//								piezaDestino = controlador.getPieza(estado.getIdDestino());
+//								ponerFicha(casillaActual, getNombrePieza(piezaDestino), 0);
+//								
+//							}
+
 						}
 
 						casillaSeleccionada = null;

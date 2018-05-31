@@ -9,9 +9,9 @@
 7 = TORRE
 
 # Puntuaciones
-Peon = 1
-Caballo = 5
-Alfil = 5
-Torre = 10
-Reina = 50
-Rey = 500
+Peon = 10
+Caballo = 30
+Alfil = 35
+Torre = 55
+Reina = 100
+Rey = 1000

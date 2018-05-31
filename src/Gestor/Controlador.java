@@ -17,16 +17,18 @@ import Piezas.Peon;
 import Piezas.Reina;
 import Piezas.Rey;
 import Piezas.Torre;
-import inteligencia.IA;
+import inteligencia.Agente;
 
 public class Controlador {
 
-	private Jugador jugador1, jugador2;
+	private Jugador jugador, rival;
 	private Jugador ganador;
 	private Tablero tablero;
 	private int turno;
 	private Properties prop;
 	private Stack<Estado> pila;
+	
+	private Agente agente;
 	
 	
 	public Controlador() {
@@ -38,23 +40,24 @@ public class Controlador {
 		
 		pila = new Stack<Estado>();
 		turno = 0;
-		jugador1 = new Jugador(COLOR.BLANCO);
-		jugador2 = new Jugador(COLOR.NEGRO);		
+		jugador = new Jugador(COLOR.BLANCO);
+		rival = new Jugador(COLOR.NEGRO);		
 		ganador = null;		
 		tablero = new Tablero();
 		colocarPiezas();
 
-		IA ia = new IA(this, 4, COLOR.NEGRO);
-		ia.calculaMovimiento(tablero);
+		 agente = new Agente(this, 4, rival.getColor());
 	}
 	
 	public Controlador(Tablero tablero, int turno) {
 		
 		turno = 0;
-		jugador1 = new Jugador(COLOR.BLANCO);
-		jugador2 = new Jugador(COLOR.NEGRO);		
+		jugador = new Jugador(COLOR.BLANCO);
+		rival = new Jugador(COLOR.NEGRO);		
 		ganador = null;		
 		this.tablero = new Tablero();
+		
+		 agente = new Agente(this, 4, rival.getColor());
 	}
 	
 
@@ -76,27 +79,19 @@ public class Controlador {
 	}
 	
 	public Jugador getJugadorTurno() {
-		Jugador jugador;		
-		if(turno % 2 == 0) jugador = jugador1;
-		else jugador = jugador2;
-		
-		return jugador;
+		if(turno % 2 == 0) return jugador;
+		return rival;
 	}
 	
-	public Jugador getRival() {
-		Jugador jugador;		
-		if(turno % 2 == 1) jugador = jugador1;
-		else jugador = jugador2;
-		
-		return jugador;
+	public Jugador getContrincante() {		
+		if(turno % 2 == 1) return jugador;
+		return rival;
 	}
 	
 	public Jugador getJugadorActual() {
-		Jugador jugador;		
-		if(turno % 2 == 0) jugador = jugador1;
-		else jugador = jugador2;
+		if(turno % 2 == 0) return jugador;
+		return rival;
 		
-		return jugador;
 	}
 	
 	
@@ -208,6 +203,16 @@ public class Controlador {
 		return casillas;
 	}
 	
+	public Estado moverAgente() {
+		if(getJugadorTurno() == rival) {
+			Estado estado = agente.calculaMovimiento(this);
+			if(estado != null && mover(estado.getIdOrigen(), estado.getIdOrigen())) {
+				return estado;
+			}
+		}
+		return null;
+	}
+	
 	public boolean mover(int idOrigen, int idDestino) {
 		
 		Casilla origen = tablero.getCasilla(idOrigen);
@@ -220,7 +225,7 @@ public class Controlador {
 
 			Pieza mata = destino.ocupar(pieza);
 			if(mata != null) {
-				matar(mata, getRival());
+				matar(mata, getContrincante());
 			}
 			
 			pieza.avanzar();
@@ -311,7 +316,7 @@ public class Controlador {
 		tablero.updateCasilla(destino);
 		
 //		Pieza pieza = destino.getPieza();
-		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno, destino.getPieza().getColor());
+		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno, getJugadorActual().getColor());
 		pila.push(estado);
 	}
 	
@@ -404,22 +409,22 @@ public class Controlador {
 	}
 	
 	public Jugador getJugador1() {
-		return jugador1;
+		return jugador;
 	}
 
 
 	public void setJugador1(Jugador jugador1) {
-		this.jugador1 = jugador1;
+		this.jugador = jugador1;
 	}
 
 
-	public Jugador getJugador2() {
-		return jugador2;
+	public Jugador getRival() {
+		return rival;
 	}
 
 
-	public void setJugador2(Jugador jugador2) {
-		this.jugador2 = jugador2;
+	public void setRival(Jugador jugador2) {
+		this.rival = jugador2;
 	}
 
 
