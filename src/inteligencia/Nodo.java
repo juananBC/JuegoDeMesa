@@ -32,6 +32,18 @@ public class Nodo {
 //		return hijo;
 //	}
 	
+	public static Nodo max(Nodo n1, Nodo n2) {
+		if(n1.getEstado().getPuntuacion() >= n2.getEstado().getPuntuacion())
+			return n1;
+		return n2;
+	}
+	
+	public static Nodo min(Nodo n1, Nodo n2) {
+		if(n1.getEstado().getPuntuacion() <= n2.getEstado().getPuntuacion())
+			return n1;
+		return n2;
+	}
+	
 	public void addHijo(Nodo hijo) {	
 		if(hijo != null)
 			hijos.add(hijo);		
@@ -46,7 +58,7 @@ public class Nodo {
 	}
 	
 	public boolean isTerminal() {
-		return hijos == null || estado.finJuego();
+		return hijos == null  || estado.finJuego();
 	}
 	
 	public Estado getEstado() {

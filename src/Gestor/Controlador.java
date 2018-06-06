@@ -76,12 +76,9 @@ public class Controlador {
 		origen.setPieza(aux);
 		
 		turno = estado.getTurno();
+		ganador = null;
 	}
 	
-	public Jugador getJugadorTurno() {
-		if(turno % 2 == 0) return jugador;
-		return rival;
-	}
 	
 	public Jugador getContrincante() {		
 		if(turno % 2 == 1) return jugador;
@@ -204,25 +201,30 @@ public class Controlador {
 	}
 	
 	public Estado moverAgente() {
-		if(getJugadorTurno() == rival) {
+		if(getJugadorActual() == rival) {		
 			Estado estado = agente.calculaMovimiento(this);
-			if(estado != null && mover(estado.getIdOrigen(), estado.getIdOrigen())) {
+			if(estado != null) {
+				boolean mover;
+				mover = mover(estado.getIdOrigen(), estado.getIdDestino());
+				if(mover)
 				return estado;
 			}
 		}
 		return null;
 	}
 	
-	public boolean mover(int idOrigen, int idDestino) {
+	public boolean mover(int idOrigen, int idDestino) {		
+		if(idOrigen < 0 ||  idOrigen > Tablero.TAMANO_TOTAL || 
+			idDestino < 0 || idDestino > Tablero.TAMANO_TOTAL) return false;
 		
 		Casilla origen = tablero.getCasilla(idOrigen);
 		Casilla destino = tablero.getCasilla(idDestino);
 		
 		if(puedeMover(origen, destino)) {
 
-			Pieza pieza = origen.getPieza();			
+			Pieza pieza = origen.getPieza();
 			origen.liberar();
-
+			
 			Pieza mata = destino.ocupar(pieza);
 			if(mata != null) {
 				matar(mata, getContrincante());
@@ -230,9 +232,7 @@ public class Controlador {
 			
 			pieza.avanzar();
 			pieza = convertirPeon(destino, pieza);
-			guardaMovimiento(mata, origen, destino);
-			turno++;
-			
+			guardaMovimiento(mata, origen, destino);	
 			
 			return true;
 		} 
@@ -244,7 +244,7 @@ public class Controlador {
 		jugador.matar();
 		
 		if(pieza.getNombre() == Pieza.NOMBRE.REY)
-			ganador = getJugadorTurno();
+			ganador = getJugadorActual();
 	}
 	
 	/**
@@ -260,7 +260,7 @@ public class Controlador {
 		if(origen == null || destino == null || !origen.isOcupada()) return false;		
 		
 		Pieza pieza = origen.getPieza();	
-		if(pieza.getColor() != getJugadorTurno().getColor())
+		if(pieza.getColor() != getJugadorActual().getColor())
 			return false;
 		
 		return (pieza.isValid(origen, destino) && (pieza.isPuedeSaltar() || !hayObstaculos(origen, destino)));
@@ -318,6 +318,8 @@ public class Controlador {
 //		Pieza pieza = destino.getPieza();
 		Estado estado = new Estado(mata, origen.getId(), destino.getId(), turno, getJugadorActual().getColor());
 		pila.push(estado);
+		
+		turno++;
 	}
 	
 	

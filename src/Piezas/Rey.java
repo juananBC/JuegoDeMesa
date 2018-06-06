@@ -11,7 +11,7 @@ import Juego.Pieza;
 public class Rey extends Pieza {
 
 	public Rey(COLOR color) {
-		super(color, 2, NOMBRE.REY);
+		super(color, 1, NOMBRE.REY);
 
 		Set<MOVIMIENTOS> movimientos = new HashSet<MOVIMIENTOS>();		
 		movimientos.add(MOVIMIENTOS.HORIZONTAL);

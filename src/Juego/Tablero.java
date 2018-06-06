@@ -8,7 +8,7 @@ import java.util.List;
 public class Tablero {
 
 	public static final int TAMANO = 8;
-	private static final int TAMANO_TOTAL = TAMANO * TAMANO;
+	public static final int TAMANO_TOTAL = TAMANO * TAMANO;
 	
 	private Casilla[][] casillas;
 	

@@ -52,7 +52,7 @@ public class Juego {
 		pintarTablero();		
 	}
 
-	private void calcPadding(JPanel jpTablero) {
+	private void calcPadding() {
 		int size = Math.min(jpTablero.getWidth(), jpTablero.getHeight());
 		TAM_CASILLA = (int)( size / Tablero.TAMANO);
 		PADDING_X = jpTablero.getWidth() -  jpTablero.getHeight();
@@ -64,9 +64,11 @@ public class Juego {
 	
 	
 	public void pintarTablero() {
-		this.jpTablero.removeAll();
-		this.casillas.clear();
-		calcPadding(jpTablero);
+				
+		casillas.clear();// = new ArrayList<JLabel>();
+		jpTablero.removeAll();
+
+		calcPadding();
 
 		for (int y = 0; y < Tablero.TAMANO; y++) {
 			for (int x = 0; x< Tablero.TAMANO; x++) {
@@ -79,6 +81,9 @@ public class Juego {
 		if(casillaSeleccionada != null) 			
 			posiblesMovimiento(Integer.parseInt(casillaSeleccionada.getName()));
 		
+		jpTablero.validate();
+		jpTablero.repaint();
+
 	}
 	
 	
@@ -212,7 +217,19 @@ public class Juego {
 							piezaDestino = controlador.getPieza(idDestino);
 							ponerFicha(casillaActual, getNombrePieza(piezaDestino), 0);
 
-							Estado estado = controlador.moverAgente();
+							Estado estado = null;
+							try {
+							estado = controlador.moverAgente();
+							
+//							casillaActual = casillas.get(estado.getIdDestino());
+//							piezaDestino = controlador.getPieza(estado.getIdDestino());
+//							ponerFicha(casillaActual, getNombrePieza(piezaDestino), 0);
+							
+							}catch(Exception e) {
+								e.printStackTrace();
+								System.out.println();
+							}	
+							
 //							if(estado != null) {
 //								casillaActual = casillas.get(estado.getIdOrigen());
 //								piezaDestino = controlador.getPieza(estado.getIdDestino());
@@ -223,7 +240,9 @@ public class Juego {
 						}
 
 						casillaSeleccionada = null;
-						eliminarCasillasPosibles(idDestino);
+//						eliminarCasillasPosibles(idDestino);
+						
+						pintarTablero();
 					}
 					
 					

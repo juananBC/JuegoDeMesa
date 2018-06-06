@@ -8,7 +8,7 @@ public class Arbol {
 	private Nodo raiz;
 	
 	public Arbol(COLOR color) {		
-		raiz = new Nodo(null, new Estado(null, -1, -1, Integer.MAX_VALUE, color));
+		raiz = new Nodo(null, new Estado(null, -1, -1, 0, color));
 	}
 
 	public Nodo getRaiz() {
@@ -17,7 +17,6 @@ public class Arbol {
 
 	public void setRaiz(Nodo raiz) {
 		this.raiz = raiz;
-	}
+	}	
 		
-	
 }

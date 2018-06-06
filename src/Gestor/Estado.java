@@ -11,6 +11,7 @@ public class Estado  {
 	private int puntuacion;
 	private COLOR color;
 	
+	private int profundidad;
 	
 	public Estado(int turno, COLOR color, int puntuacion) {
 		this.mata = null;
@@ -19,6 +20,9 @@ public class Estado  {
 		this.turno = turno;
 		this.color = color;
 		this.puntuacion = puntuacion; //(mata == null)? 0:mata.getValorMuerte();
+		
+
+		this.profundidad = 0;
 	}
 	
 	public Estado(Pieza mata, int idOrigen, int idDestino, int turno, COLOR color){
@@ -28,6 +32,8 @@ public class Estado  {
 		this.turno = turno;
 		this.color = color;
 		this.puntuacion = (mata == null)? 0:mata.getValorMuerte();
+		
+		this.profundidad = 0;
 	}
 
 	public static Estado max(Estado e1, Estado e2) {
@@ -100,6 +106,15 @@ public class Estado  {
 	public void setColor(COLOR color) {
 		this.color = color;
 	}
+
+	public int getProfundidad() {
+		return profundidad;
+	}
+
+	public void setProfundidad(int profundidad) {
+		this.profundidad = profundidad;
+	}
+	
 	
 	
 }
