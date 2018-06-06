@@ -92,11 +92,12 @@ public class GUI {
 		jpControles.setBackground(Color.RED);
 		frmAjedrez.getContentPane().add(jpControles, BorderLayout.SOUTH);
 		
-		lblNewLabel = new JLabel("New label");
+		lblNewLabel = new JLabel("Revertir");
 		lblNewLabel.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent arg0) {
-				juego.revertir();				
+				juego.revertir();	// CPU
+				juego.revertir();	// Jugador
 				jpTablero.repaint();
 				
 			}

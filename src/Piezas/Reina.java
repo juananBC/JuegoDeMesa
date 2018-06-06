@@ -11,8 +11,12 @@ import Juego.Movimiento.MOVIMIENTOS;
 
 public class Reina  extends Pieza{
 
+	private boolean fromPeon;
+	
 	public Reina(COLOR color) {
-		super(color, Tablero.TAMANO - 1, NOMBRE.REINA);		
+		super(color, Tablero.TAMANO - 1, NOMBRE.REINA);	
+		
+		fromPeon = false;
 		
 		// Movimientos en diagonal
 		Set<MOVIMIENTOS> movimientos = new HashSet<MOVIMIENTOS>();		
@@ -20,7 +24,7 @@ public class Reina  extends Pieza{
 		movimientos.add(MOVIMIENTOS.DIAGONAL);
 		
 		setMovimientos(movimientos);		
-		setMatar(movimientos);			
+		setMatar(movimientos);	
 	}
 
 	@Override
@@ -29,4 +33,13 @@ public class Reina  extends Pieza{
 		return null;
 	}
 
+	public boolean isFromPeon() {
+		return fromPeon;
+	}
+
+	public void setFromPeon(boolean fromPeon) {
+		this.fromPeon = fromPeon;
+	}
+
+	
 }

@@ -34,9 +34,11 @@ public class Controlador {
 	public Controlador() {
 		prop = new Properties();
 		
+		int profundidad = 0;
 		try {
 			prop.load(new FileInputStream("C:\\Users\\JNBN007\\Desktop\\workspace\\JuegoDeMesa\\resources\\config"));
-		} catch (IOException e) {}
+			profundidad = Integer.parseInt(prop.getProperty("profundidad", "0"));
+		} catch (Exception e) {}
 		
 		pila = new Stack<Estado>();
 		turno = 0;
@@ -46,21 +48,13 @@ public class Controlador {
 		tablero = new Tablero();
 		colocarPiezas();
 
-		 agente = new Agente(this, 4, rival.getColor());
-	}
-	
-	public Controlador(Tablero tablero, int turno) {
-		
-		turno = 0;
-		jugador = new Jugador(COLOR.BLANCO);
-		rival = new Jugador(COLOR.NEGRO);		
-		ganador = null;		
-		this.tablero = new Tablero();
-		
-		 agente = new Agente(this, 4, rival.getColor());
+		agente = new Agente(this, profundidad , rival.getColor());
 	}
 	
 
+	/**
+	 * Vuelve atras el ultimo movimiento realizado.
+	 */
 	public void revertir() {		
 		if(pila.empty()) return;
 		
@@ -71,6 +65,8 @@ public class Controlador {
 		
 		Pieza aux = destino.getPieza();
 		aux.retrasar();
+		
+		aux = Pieza.transformaReinaPeon(aux);
 		
 		destino.setPieza(estado.getMata());
 		origen.setPieza(aux);
@@ -231,8 +227,8 @@ public class Controlador {
 			}
 			
 			pieza.avanzar();
-			pieza = convertirPeon(destino, pieza);
-			guardaMovimiento(mata, origen, destino);	
+//			pieza = convertirPeon(destino);
+			guardarMovimiento(mata, origen, destino);	
 			
 			return true;
 		} 
@@ -296,12 +292,21 @@ public class Controlador {
 	}
 	
 	
-	private Pieza convertirPeon(Casilla casilla, Pieza p) {
+	private Pieza convertirPeon(Casilla casilla) {
+		Pieza p = casilla.getPieza();
+		
 		if(p  instanceof Peon) {
-			if(casilla.getY() == 0 || casilla.getY() == Tablero.TAMANO - 1) {
-			//p.setNombre(NOMBRE.REINA);
-			p = new Reina(p.getColor());
-			casilla.setPieza(p);
+
+			if (casilla.getY() == 0 || casilla.getY() == Tablero.TAMANO - 1) {
+				System.out.println(casilla.getX() + " , " + casilla.getY() + ", " + casilla.getId());
+				
+				// p.setNombre(NOMBRE.REINA);
+				Reina reina = new Reina(p.getColor());
+				reina.setFromPeon(true);
+				
+				casilla.setPieza(reina);
+
+				p = reina;
 			}
 			
 		}
@@ -311,7 +316,7 @@ public class Controlador {
 	}
 	
 	
-	private void guardaMovimiento(Pieza mata, Casilla origen, Casilla destino) {
+	private void guardarMovimiento(Pieza mata, Casilla origen, Casilla destino) {
 		tablero.updateCasilla(origen);
 		tablero.updateCasilla(destino);
 		

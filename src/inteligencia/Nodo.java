@@ -32,15 +32,45 @@ public class Nodo {
 //		return hijo;
 //	}
 	
+	public void calcPuntuacion(boolean isIncrement) {
+		if(hasParent()) {
+			Estado estadoPadre = parent.getEstado();
+			if(isIncrement)	estado.actualizaPuntos(estadoPadre.getPuntuacion());
+			else estado.actualizaPuntos(-estadoPadre.getPuntuacion());
+		}
+	}
+	
 	public static Nodo max(Nodo n1, Nodo n2) {
+		if(iguales(n1, n2)) {
+			if (n1.getEstado().getMata() != null) return n1;
+			if (n2.getEstado().getMata() != null) return n2;
+			return random(n1, n2);
+		}
+			
 		if(n1.getEstado().getPuntuacion() >= n2.getEstado().getPuntuacion())
 			return n1;
 		return n2;
 	}
 	
 	public static Nodo min(Nodo n1, Nodo n2) {
+		if(iguales(n1, n2)) {
+			if (n1.getEstado().getMata() != null) return n1;
+			if (n2.getEstado().getMata() != null) return n2;
+			return random(n1, n2);
+		}
+		
 		if(n1.getEstado().getPuntuacion() <= n2.getEstado().getPuntuacion())
 			return n1;
+		return n2;
+	}
+	
+	private static boolean iguales(Nodo n1, Nodo n2) {
+		return (n1.getEstado().getPuntuacion() == n2.getEstado().getPuntuacion());
+	}
+	
+	private static Nodo random(Nodo n1, Nodo n2) {
+		double rand = Math.random();		
+		if(rand < 0.5) return n1;
 		return n2;
 	}
 	

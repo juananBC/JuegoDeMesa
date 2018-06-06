@@ -33,8 +33,6 @@ public class Agente {
 		this.profundidad = profundidad;
 		this.controlador = controlador;
 		this.color = color;
-		
-		
 	
 	}
 	
@@ -45,30 +43,17 @@ public class Agente {
 		arbol = new Arbol(color);	
 		
 		log = new Log();
-		profundidad = 3;
+
 		generarHijos(arbol.getRaiz(), profundidad);		
-		
-//		System.out.println("ARBOL");
-//		for(Nodo nodo: arbol.getRaiz().getHijos()) {
-//			System.out.println(nodo.getEstado().getIdOrigen() + " " + nodo.getEstado().getIdDestino() + "   ");
-//			for(Nodo hijo: nodo.getHijos()) {
-//				System.out.println(" ++ " +hijo.getEstado().getIdOrigen() + " " + hijo.getEstado().getIdDestino() + "   ");
-//			}
-//		}
-		
-		System.out.println();
-		
-//		Estado estado = minimax(arbol.getRaiz(), profundidad , MAX);		
-		
+							
 		Nodo nodo =  minimax(arbol.getRaiz(), profundidad , MAX);
 		while(nodo.getParent() != arbol.getRaiz()) {
 			nodo = nodo.getParent();
 		}
-		
-		Estado estado = nodo.getEstado();
-		log.cerrar();
-		
 
+		Estado estado = nodo.getEstado();
+//		System.out.println(estado.getIdOrigen() + " " + estado.getIdDestino());
+		log.cerrar();
 		
 		
 		return estado;
@@ -76,100 +61,35 @@ public class Agente {
 	}
 	
 
-	public Nodo minimax(Nodo nodo, int prof, boolean isMaximizador) {
+	private Nodo minimax(Nodo nodo, int prof, boolean isMaximizador) {
 
-		if(prof < 0 || nodo.isTerminal() || nodo.getHijos().isEmpty() )
-			return nodo; //getValor();
+		if(prof < 0 || nodo.isTerminal() ) //|| nodo.getHijos().isEmpty() )
+			return nodo; 
 		
 		Nodo mejorValor;
 		Nodo valorActual;	
-//		Estado estadoNodo = nodo.getEstado();
-
-//		mejorValor = nodo.getHijos().get(0).getEstado();
 		
 		if(isMaximizador) {
-			COLOR c =  (color == COLOR.BLANCO)? COLOR.NEGRO: COLOR.BLANCO;
-			mejorValor = new Nodo(nodo, new Estado(controlador.getTurno(), c, Integer.MIN_VALUE));
+			mejorValor = new Nodo(null, new Estado(-1, color, Integer.MIN_VALUE));
 			
 			for(Nodo hijo: nodo.getHijos()) {
 				valorActual = minimax(hijo, prof - 1, MIN);
-				System.out.println("MAX " + valorActual.getEstado().getColor() + " - " + mejorValor.getEstado().getColor() + "\n" 
-						+ valorActual.getEstado().getTurno() + " - " + mejorValor.getEstado().getTurno() + "\n" );
 				mejorValor = Nodo.max(valorActual,  mejorValor);
 			}	
 			
-			updateValor(mejorValor, MIN);
-
-//			estadoNodo.actualizaPuntos(mejorValor.getPuntuacion());
 			
 		} else { // Minimizador
-			mejorValor = new Nodo(nodo, new Estado(controlador.getTurno(), color, Integer.MAX_VALUE));
+			mejorValor = new Nodo(null, new Estado(-1, color, Integer.MAX_VALUE));
 			
 			for(Nodo hijo: nodo.getHijos()) {
 				valorActual = minimax(hijo, prof - 1, MAX);
-				System.out.println("MIN " + valorActual.getEstado().getColor() + " - " + mejorValor.getEstado().getColor() + "\n" 
-						+ valorActual.getEstado().getTurno() + " - " + mejorValor.getEstado().getTurno() + "\n" );
 				mejorValor = Nodo.min(valorActual,  mejorValor);				
 			}
-			System.out.print(mejorValor.getValor() + "  ");
-			updateValor(mejorValor, MAX);			
-			System.out.println(mejorValor.getValor());
-//			estadoNodo.actualizaPuntos(-mejorValor.getPuntuacion());
-//			nodo.getEstado().setPuntuacion(mejorValor.getPuntuacion() - puntuacion );
 		}
-		
-//		nodo.setEstado(estadoNodo);
 
 		return mejorValor;
 	}
 
-	private void updateValor(Nodo nodo, boolean isMax) {
-		
-		Nodo parent = nodo.getParent();
-		if(nodo.hasParent()) {
-			int tipo = (isMax)? 1:-1;
-			parent.getEstado().actualizaPuntos(tipo*nodo.getValor() );
-		}
-	}
-	
-//	public Estado minimax2(Nodo nodo, int prof, boolean isMaximizador) {
-//
-//		if(prof < 0 || nodo.isTerminal() || nodo.getHijos().isEmpty() )
-//			return nodo.getEstado(); //getValor();
-//		
-//		Estado mejorValor;
-//		Estado valorActual;	
-////		Estado estadoNodo = nodo.getEstado();
-//
-////		mejorValor = nodo.getHijos().get(0).getEstado();
-//		
-//		if(isMaximizador) {
-//			COLOR c =  (color == COLOR.BLANCO)? COLOR.NEGRO: COLOR.BLANCO;
-//			mejorValor = new Estado(controlador.getTurno(), c, Integer.MIN_VALUE);
-//			
-//			for(Nodo hijo: nodo.getHijos()) {
-//				valorActual = minimax(hijo, prof - 1, MIN);
-//				mejorValor = Estado.max(valorActual,  mejorValor);
-//			}	
-//			
-////			estadoNodo.actualizaPuntos(mejorValor.getPuntuacion());
-//			
-//		} else { // Minimizador
-//			mejorValor = new Estado(controlador.getTurno(), color, Integer.MAX_VALUE);
-//			
-//			for(Nodo hijo: nodo.getHijos()) {
-//				valorActual = minimax(hijo, prof - 1, MAX);
-//				mejorValor = Estado.min(valorActual,  mejorValor);				
-//			}	
-//			
-////			estadoNodo.actualizaPuntos(-mejorValor.getPuntuacion());
-////			nodo.getEstado().setPuntuacion(mejorValor.getPuntuacion() - puntuacion );
-//		}
-//		
-////		nodo.setEstado(estadoNodo);
-//
-//		return mejorValor;
-//	}
 	
 	
 	private Nodo generarHijos(Nodo parent, int prof) {
@@ -177,25 +97,16 @@ public class Agente {
 		if(prof == 0 || parent.isTerminal()) {
 			Estado estado = parent.getEstado();
 			Pieza pieza = estado.getMata();
-			if(pieza != null) 	{	
-				 estado.setPuntuacion(pieza.getValorMuerte());
+			
+			if(pieza != null) 	{		
+				if(pieza.getColor() == color) estado.setPuntuacion((-1)*pieza.getValorMuerte());
+				else estado.setPuntuacion(pieza.getValorMuerte());
+			} else {
+				estado.setPuntuacion(0);
 			}
 
-//			if( parent.isTerminal() && pieza != null)
-//				System.out.println("MATA: "+prof + "   " + pieza.getNombre() );
-			
-			// TODO: Hay que mirar de sumar/restar las muertes de toda la rama
-//			if (parent.hasParent()) {
-//				System.out.print("Padre = " + parent.getParent().getEstado().getPuntuacion() + "   hijo = " + estado.getPuntuacion());
-//				if (estado.getColor() == color) {
-//					estado.actualizaPuntos(parent.getParent().getEstado().getPuntuacion());
-//				} else {
-//					estado.actualizaPuntos((-1) * parent.getParent().getEstado().getPuntuacion());
-//				}
-//				System.out.println("  Padre = " + parent.getParent().getEstado().getPuntuacion() + "   hijo = " + estado.getPuntuacion());
-//
-//			}
-			
+//			parent.setEstado((estado));
+				
 			parent.setTerminal();
 			return parent;
 		}
@@ -211,20 +122,22 @@ public class Agente {
 					Set<Integer> movs = controlador.getOpcionesMover(casilla.getId());	
 					for(int idDestino: movs) {	
 						
-						if(!vuelveAtras(parent, idDestino)) {	
+//						if(!vuelveAtras(parent, idDestino)) {	
 							if(controlador.mover(casilla.getId(), idDestino)) {
 								
 								Estado estado = controlador.getUltimoMovimiento();								
 								estado.setProfundidad(profundidad - prof);
 		
-						writeLog(estado, prof);
 						
 								Nodo hijo = new Nodo(parent, estado);	
 								hijo = generarHijos(hijo, prof - 1);
+hijo.calcPuntuacion(color == hijo.getEstado().getColor());
+							writeLog(hijo.getEstado(), prof);
+								
 								parent.addHijo(hijo);
 								controlador.revertir();
 							}							
-						}						
+//						}						
 					}
 				}
 			}
@@ -251,8 +164,13 @@ public class Agente {
 		String TAB = "";
 		for(int i = profundidad - prof; i > 0; i--) TAB += "\t";
 		Pieza pieza = controlador.getPieza(estado.getIdDestino());
+		
+		String mata ="";		
+		if(estado.getMata() != null)
+			mata = "["+estado.getMata().getNombre() + " " +estado.getMata().getColor()+"]";
+		
 		log.append(TAB + prof + " NODO " + pieza.getNombre() + " " + estado.getColor() + ": " + estado.getIdOrigen()
-				+ " -> " + estado.getIdDestino() + " (" + estado.getPuntuacion()+ ")\n");
+				+ " -> " + estado.getIdDestino() + " (" + estado.getPuntuacion()+ ") "+ mata +"\n");
 	
 	}
 }

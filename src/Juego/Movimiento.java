@@ -62,7 +62,7 @@ public class Movimiento {
 		int x = Math.abs(this.x);
 		int y = Math.abs(this.y);
 
-		final int MAX = p.getDistancia();
+		final int MAX = Math.min(p.getDistancia(), p.getDistanciaMatar());
 		if (x > MAX || y > MAX || x != y) return false;		
 		
 		return true;
@@ -76,7 +76,7 @@ public class Movimiento {
 		int x = Math.abs(this.x);
 		int y = Math.abs(this.y);
 
-		final int MAX = p.getDistancia();
+		final int MAX = Math.max(p.getDistancia(), p.getDistanciaMatar());
 		if (x > MAX || y > MAX ) return false;
 		return (x != 0 && y == 0) || (x == 0 && y != 0);
 	}

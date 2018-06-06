@@ -36,7 +36,6 @@ public class Tablero {
 		return lista;
 	}
 
-
 	/**
 	 * Obtiene la casilla a partir del identificador
 	 * @param casilla
@@ -56,26 +55,12 @@ public class Tablero {
 	 * @return
 	 */
 	public Casilla getCasilla(int x, int y) {
-		if(x <0 || y < 0 || x >= TAMANO|| y >= TAMANO) return null;
+		if(x < 0 || y < 0 || x >= TAMANO|| y >= TAMANO) return null;
 		return this.casillas[x][y];
 	}
 	
 	public void updateCasilla(Casilla casilla) {
 		this.casillas[casilla.getX()][casilla.getY()] = casilla;
 	}
-	
-	
-	public Tablero copiarEstado() {
-		Tablero t = new Tablero();
 		
-		for (int y = 0; y < Tablero.TAMANO; y++) {
-			for (int x = 0; x < Tablero.TAMANO; x++) {
-				Pieza p = this.getCasilla(x, y).getPieza();					
-				t.getCasilla(x, y).setPieza(p);				
-			}
-		}
-		
-		return t;
-	}
-	
 }

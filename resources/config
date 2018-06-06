@@ -15,3 +15,5 @@ Alfil = 35
 Torre = 55
 Reina = 100
 Rey = 1000
+
+profundidad = 4

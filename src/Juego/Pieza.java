@@ -7,6 +7,8 @@ import java.util.Set;
 
 import Excepciones.MovimientoNoValido;
 import Juego.Movimiento.MOVIMIENTOS;
+import Piezas.Peon;
+import Piezas.Reina;
 
 public abstract class Pieza {
 	
@@ -17,6 +19,7 @@ public abstract class Pieza {
 	
 	private COLOR color;
 	private int distancia; 		// Cantidad de pasos que puede moverse
+	private int distanciaMatar;
 	private boolean libre;		// Moverse en cualquier direccion (true), o adelante (false)
 	private boolean puedeSaltar;// Puede botar piezas (true), o son obstaculos (false)
 	private NOMBRE nombre; 
@@ -29,6 +32,7 @@ public abstract class Pieza {
 	public Pieza(COLOR color, int distancia, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
 		this.color = color;
 		this.distancia = distancia;
+		this.distanciaMatar = distancia;
 		this.libre = libre;
 		this.puedeSaltar = puedeSaltar;
 		this.nombre = nombre;
@@ -37,11 +41,23 @@ public abstract class Pieza {
 		initValorMuerte();		
 	}
 	
+	public Pieza(COLOR color, int distancia, int distanciaMatar, boolean libre, boolean puedeSaltar, NOMBRE nombre) {
+		this.color = color;
+		this.distancia = distancia;
+		this.distanciaMatar = distanciaMatar;
+		this.libre = libre;
+		this.puedeSaltar = puedeSaltar;
+		this.nombre = nombre;
+		this.numPasos = 0;
+		
+		initValorMuerte();		
+	}
 	
 	public Pieza(COLOR color, int distancia, NOMBRE nombre) { 
 		
 		this.color = color;
 		this.distancia = distancia;
+		this.distanciaMatar = distancia;
 		this.libre = true;
 		this.puedeSaltar = false;
 		this.nombre = nombre;
@@ -105,8 +121,7 @@ public abstract class Pieza {
 	
 	public boolean matarValido(Movimiento m, Casilla origen, Casilla destino) {
 
-		if( !destino.isOcupada() 
-				|| destino.getPieza().getColor() == color) 
+		if( !destino.isOcupada() || destino.getPieza().getColor() == color) 
 			return false;
 				
 		for(MOVIMIENTOS movimiento : matar) {				
@@ -136,6 +151,23 @@ public abstract class Pieza {
 		mover();
 	}
 
+	/**
+	 * Destransorforma una reina que antes era un peon.
+	 */
+	public static Pieza transformaReinaPeon(Pieza aux) {
+		if(aux instanceof Reina) {
+			Reina reina = (Reina) aux;
+
+			if(reina.isFromPeon() && reina.getNumPasos() < 0) {
+				Peon peon = new Peon(aux.getColor());
+				peon.setNumPasos(5);
+				aux = peon;
+			}
+		}
+		
+		return aux;
+	}
+	
 	public COLOR getColor() {
 		return color;
 	}
@@ -225,6 +257,14 @@ public abstract class Pieza {
 
 	public void setNumPasos(int numPasos) {
 		this.numPasos = numPasos;
+	}
+
+	public int getDistanciaMatar() {
+		return distanciaMatar;
+	}
+
+	public void setDistanciaMatar(int distanciaMatar) {
+		this.distanciaMatar = distanciaMatar;
 	}
 	
 	

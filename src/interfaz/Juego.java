@@ -20,6 +20,7 @@ import javax.swing.BorderFactory;
 import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 import Gestor.Controlador;
 import Gestor.Estado;
@@ -89,12 +90,17 @@ public class Juego {
 	
 	private JLabel pintarCasilla(int x, int y) {
 		COLOR color = controlador.getColorCasilla(x, y);
-
-		JLabel jCasilla = new JLabel("");
 		String casillaId = controlador.getCasilla(x, y).getId()+"";
+
+		JLabel jCasilla = new JLabel();
+		
+		jCasilla.setText(casillaId);
+		jCasilla.setHorizontalTextPosition(SwingConstants.CENTER);
+		jCasilla.setVerticalTextPosition(SwingConstants.CENTER);
+		jCasilla.setForeground(Color.DARK_GRAY);
 		
 		jCasilla.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));		
-		jCasilla.setIconTextGap(1);
+		jCasilla.setIconTextGap(4);
 		jCasilla.setOpaque(true);
 		jCasilla.setName(casillaId);		
 		jCasilla.addMouseListener(eventClickCasilla());
